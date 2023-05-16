@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 19
+  m_SortingOrder: 1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.9528302, g: 0.82900184, b: 0, a: 0.49019608}
   m_FlipX: 0
@@ -214,3 +214,6 @@ MonoBehaviour:
   aiColor: {r: 1, g: 0.29803923, b: 0.29803923, a: 1}
   _renderer: {fileID: 2536451380990793842}
   highlight: {fileID: 445884253345674995}
+  isWalkable: 0
+  OccupiedPiece: {fileID: 0}
+  OccupiedTile: {fileID: 0}

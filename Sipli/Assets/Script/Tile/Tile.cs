@@ -9,6 +9,10 @@ public class Tile : MonoBehaviour
     [SerializeField] private Color baseColor, playerColor, aiColor;
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private GameObject highlight;
+    [SerializeField] private bool isWalkable;
+
+    public BasePiece OccupiedPiece;
+    public Tile OccupiedTile;
 
     public void Init(string color)
     {
@@ -34,5 +38,10 @@ public class Tile : MonoBehaviour
     void OnMouseExit()
     {
         highlight.SetActive(false);
+    }
+
+    public void SetPiece(BasePiece piece)
+    {
+
     }
 }

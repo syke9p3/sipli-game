@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1796880216017875116}
   - component: {fileID: 1796880216017875117}
-  - component: {fileID: 1796880216017875118}
+  - component: {fileID: 7098428095222421557}
   m_Layer: 0
   m_Name: Piece
   m_TagString: Untagged
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d036b4d0af57aad41a3a229dcc7cbb24, type: 3}
+  m_SortingOrder: 10
+  m_Sprite: {fileID: 21300000, guid: d7b0269a65dea7243990e41a4440e228, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1796880216017875118
+--- !u!114 &7098428095222421557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,6 +94,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1796880216017875119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4f31c1a297012949b3d2044c4394848, type: 3}
+  m_Script: {fileID: 11500000, guid: 655f67ca6339564449e3fddbfd2d4a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+  movePlate: {fileID: 0}
+  ally_infinity: {fileID: 21300000, guid: c5d4ee9702d445747955915ff38db049, type: 3}
+  ally_xzero: {fileID: 21300000, guid: d2067afd288bfc342869920784b9bcd2, type: 3}
+  ally_zero: {fileID: 21300000, guid: 5a2b96710f980064c9dcd3f8c4202dc8, type: 3}
+  ally_one: {fileID: 21300000, guid: 5c474a614156d4640b1e92f21e04e386, type: 3}
+  ally_two: {fileID: 21300000, guid: e13f221daabdeef41a16a787fe0556b0, type: 3}
+  ally_three: {fileID: 21300000, guid: c3529df1033fff9419bb0bef5c0139e0, type: 3}
+  enemy_piece: {fileID: 21300000, guid: ce4ccc5361f61c44bb896140af453498, type: 3}
