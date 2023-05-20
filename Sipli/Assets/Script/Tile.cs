@@ -26,13 +26,25 @@ public class Tile : MonoBehaviour
         }
     }
 
-    void OnMouseEnter()
-    {
-        highlight.SetActive(true);
-    }
+    //void OnMouseEnter()
+    //{
+    //    highlight.SetActive(true);
+    //}
     
+<<<<<<< Updated upstream:Sipli/Assets/Script/Tile.cs
     void OnMouseExit()
     {
         highlight.SetActive(false);
     }
+=======
+    //void OnMouseExit()
+    //{
+    //    highlight.SetActive(false);
+    //}
+
+    //public void SetPiece(BasePiece piece)
+    //{
+
+    //}
+>>>>>>> Stashed changes:Sipli/Assets/Script/Tile/Tile.cs
 }
