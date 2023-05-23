@@ -22,9 +22,11 @@ public class Game : MonoBehaviour
     private bool gameOver = false;
 
     public GameObject playerTurnUI;
+    private CombatManager combatManager;
 
     void Start()
     {
+        combatManager = GetComponent<CombatManager>();
         GenerateBoard();
     }
 
@@ -209,8 +211,6 @@ public class Game : MonoBehaviour
     public void Update()
     {
         
-        
-
         if (gameOver == true && Input.GetMouseButtonDown(0))
         {
             gameOver = false;
@@ -224,7 +224,8 @@ public class Game : MonoBehaviour
     {
        gameOver = true;
 
-    //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+        //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+        Debug.Log(playerWinner + " is the winner");
     //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner";
 
     //   GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;

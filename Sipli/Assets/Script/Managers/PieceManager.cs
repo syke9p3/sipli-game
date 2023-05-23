@@ -12,10 +12,10 @@ public class PieceManager : MonoBehaviour
     private int xBoard = -1;
     private int yBoard = -1;
 
-    private string player;
+    public string player;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
-    public Sprite enemy_piece, enemy_infinity, enemy_xzero, enemy_one, enemy_two, enemy_three;
+    public Sprite  enemy_infinity, enemy_xzero, enemy_zero ,enemy_one, enemy_two, enemy_three; // enemy_piece,
 
     public void Activate()
     {
@@ -31,12 +31,12 @@ public class PieceManager : MonoBehaviour
             case "ally_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "white"; break;
             case "ally_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "white"; break;
             case "ally_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "white"; break;
-            case "enemy_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "enemy_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "enemy_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "enemy_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "enemy_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "enemy_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "enemy_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "black"; break;
+            case "enemy_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "black"; break;
+            case "enemy_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "black"; break;
+            case "enemy_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "black"; break;
+            case "enemy_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "black"; break;
+            case "enemy_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "black"; break;
         }
     }
 
@@ -65,6 +65,10 @@ public class PieceManager : MonoBehaviour
     public void SetYBoard(int y)
     {
         yBoard = y;
+    }
+    public string GetCurrentPlayer()
+    {
+        return player;
     }
 
     private void OnMouseUp()
@@ -134,8 +138,6 @@ public class PieceManager : MonoBehaviour
         if (sc.PositionOnBoard(x, y))
         {
             GameObject cp = sc.GetPosition(x, y);
-
-            Debug.Log("x: " + x + " y: " + y);
 
             if (cp == null)
             {
