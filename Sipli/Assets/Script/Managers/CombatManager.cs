@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    public GameObject controller;
+
+    private void Start()
+    {
+        controller = GameObject.FindGameObjectWithTag("GameController");
+    }
+
     public void ResolveCombat(GameObject attacker, GameObject defender)
     {
         // Perform combat resolution here based on your game's rules
@@ -13,61 +20,118 @@ public class CombatManager : MonoBehaviour
         string attackerName = attacker.GetComponent<PieceManager>().name;
         string defenderName = defender.GetComponent<PieceManager>().name;
 
-        // Compare the strengths of the pieces and determine the winner
-        if (attackerName == "ally_zero" && defenderName == "enemy_xzero")
+        // Same piece battle
+        if (attackerName.Substring(4) == defenderName.Substring(4))
         {
-            // Attacker (ally_zero) wins
+            // Destroy both pieces unless it's an attacker infinity
+            if (!(attackerName.Substring(4) == "infinity"))
+            {
+                Destroy(attacker);
+            }
             Destroy(defender);
         }
-        else if (attackerName == "enemy_xzero" && defenderName == "ally_zero")
+
+        // Infinity vs Other Piece
+        if (attackerName == "blu_infinity" && defenderName != "red_infinity")
         {
-            // Attacker (enemy_xzero) wins
+            Destroy(attacker);
+            controller.GetComponent<Game>().Winner("black");
+        }
+        else if (attackerName == "red_infinity" && defenderName != "blu_infinity")
+        {
+            Destroy(attacker);
+            controller.GetComponent<Game>().Winner("white");
+        }
+
+        // Other Piece vs Infinity
+        if (attackerName != "blu_infinity" && defenderName == "red_infinity")
+        {
+            Destroy(defender);
+            controller.GetComponent<Game>().Winner("white");
+
+        }
+        else if (attackerName != "red_infinity" && defenderName == "blu_infinity")
+        {
+            Destroy(defender);
+            controller.GetComponent<Game>().Winner("black");
+
+        }
+
+        // Infinity vs Infinity
+        if (attackerName == "blu_infinity" && defenderName == "red_infinity")
+        {
+            Destroy(defender);
+            controller.GetComponent<Game>().Winner("white");
+        }
+        else if (attackerName == "red_infinity" && defenderName == "blu_infinity")
+        {
+            Destroy(defender);
+            controller.GetComponent<Game>().Winner("black");
+        }
+
+        // Scout vs Ninja
+        if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) == "xzero"))
+        {
+            Destroy(defender);
+        }
+        // Scout vs Other Piece
+        else if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) != "xzero"))
+        {
             Destroy(attacker);
         }
-        else
+        // Other Piece vs Scout
+        else if ((attackerName.Substring(4) != "xzero" && defenderName.Substring(4) == "zero"))
         {
-            // Handle other combat scenarios based on your game's rules
-            // This is where you would implement the rest of your combat resolution logic
+            Destroy(defender);
         }
+
+        // Ninja vs Scout
+        if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) == "zero"))
+        {
+            Destroy(attacker);
+        }
+        // Ninja vs Other Piece
+        else if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) != "zero"))
+        {
+            Destroy(defender);
+        }
+        // Other Piece vs Ninja
+        else if ((attackerName.Substring(4) != "zero" && defenderName.Substring(4) == "xzero"))
+        {
+            Destroy(attacker);
+        }
+
+
+        if ((attackerName.Substring(4) == "infinity" || attackerName.Substring(4) == "xzero" || attackerName.Substring(4) == "xzero") ||
+            (defenderName.Substring(4) == "infinity" || defenderName.Substring(4) == "xzero" || defenderName.Substring(4) == "xzero"))
+        {
+        } else
+        {
+
+            int attackerRank = PieceManager.pieceRanks[attackerName];
+            int defenderRank = PieceManager.pieceRanks[defenderName];
+
+            if (attackerRank == defenderRank)
+            {
+                // Same rank, destroy both pieces
+                Destroy(attacker);
+                Destroy(defender);
+            }
+            else if (attackerRank > defenderRank)
+            {
+                // Attacker wins, destroy defender
+                Destroy(defender);
+            }
+            else
+            {
+                // Defender wins, destroy attacker
+                Destroy(attacker);
+            }
+        }
+
+
+    }
     }
 
-    public bool IsWinner(GameObject piece)
-    {
-        // Check if the specified piece is the winner of the combat
-        // Return true if the piece is the winner, false otherwise
 
-        // Example:
-        string pieceName = piece.GetComponent<PieceManager>().name;
 
-        // Check if the piece name corresponds to the winning condition (e.g., capturing the flag)
-        if (pieceName == "ally_infinity" || pieceName == "enemy_infinity")
-        {
-            return true; // The piece is the winner
-        }
-
-        return false; // The piece is not the winner
-    }
-
-    public bool ShouldCombatOccur(GameObject attacker, GameObject defender)
-    {
-        // Implement your combat rules here
-        // Determine whether combat should occur between the attacker and defender
-
-        // Example:
-        string attackerName = attacker.GetComponent<PieceManager>().name;
-        string defenderName = defender.GetComponent<PieceManager>().name;
-
-        // Add your combat rules based on the pieces' names
-        // Return true if combat should occur, false otherwise
-        if (attackerName == "ally_zero" && defenderName == "enemy_xzero")
-        {
-            return true; // Combat should occur between ally_zero and enemy_xzero
-        }
-        else if (attackerName == "enemy_xzero" && defenderName == "ally_zero")
-        {
-            return true; // Combat should occur between enemy_xzero and ally_zero
-        }
-
-        return false; // Default: No combat should occur
-    }
-}

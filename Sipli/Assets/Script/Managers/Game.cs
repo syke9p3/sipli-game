@@ -3,34 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
     public GameObject piece;
 
     public GameObject[,] positions = new GameObject[5, 5];
-    private GameObject[] playerPlayer = new GameObject[9];
-    private GameObject[] playerEnemy = new GameObject[9];
-
     private string[] allyPieces = new string[9];
     private string[] enemyPieces = new string[9];
 
     public Vector2 mouseOver;
 
     private string currentPlayer = "white";
+    private string playerWinner;
 
     private bool gameOver = false;
 
     public GameObject playerTurnUI;
-    private CombatManager combatManager;
 
     void Start()
     {
-        combatManager = GetComponent<CombatManager>();
         GenerateBoard();
     }
-
-    
 
     private void updateMouseOver()
     {
@@ -51,8 +46,6 @@ public class Game : MonoBehaviour
 
     void GenerateBoard()
     {
-   
-
         //tile with missing piece
 
         int xMissingAlly = Random.Range(0, 4 + 1); //get random number from x = 0 to 4
@@ -66,21 +59,21 @@ public class Game : MonoBehaviour
 
         allyPieces = new string[]
    {
-            "ally_infinity",
+            "blu_infinity",
 
-            "ally_xzero",
-            "ally_xzero",
+            "blu_xzero",
+            "blu_xzero",
 
-            "ally_zero",
-            "ally_zero",
-            "ally_zero",
+            "blu_zero",
+            "blu_zero",
+            "blu_zero",
 
-            "ally_one",
-            "ally_two",
-            "ally_three",
+            "blu_one",
+            "blu_two",
+            "blu_three",
    };
 
-        // Generate Ally pieces in (0,0) to (4,1)
+        // Generate ally pieces in (0,0) to (4,1)
         allyPieces = allyPieces.OrderBy(piece => rng.Next()).ToArray();
         int allyIndex = 0;
         for (int x = 0; x <= 4; x++)
@@ -103,22 +96,22 @@ public class Game : MonoBehaviour
             }
         }
 
-        // Generate Enemy Pieces in (0,3) to (4,4)
+        // Generate red Pieces in (0,3) to (4,4)
 
         enemyPieces = new string[]
       {
-            "enemy_infinity",
+            "red_infinity",
 
-            "enemy_xzero",
-            "enemy_xzero",
+            "red_xzero",
+            "red_xzero",
 
-            "enemy_zero",
-            "enemy_zero",
-            "enemy_zero",
+            "red_zero",
+            "red_zero",
+            "red_zero",
 
-            "enemy_one",
-            "enemy_two",
-            "enemy_three",
+            "red_one",
+            "red_two",
+            "red_three",
       };
         enemyPieces = enemyPieces.OrderBy(piece => rng.Next()).ToArray();
         int enemyIndex = 0;
@@ -191,6 +184,11 @@ public class Game : MonoBehaviour
         return currentPlayer;
     }
 
+    public string GetPlayerWinner()
+    {
+        return playerWinner;
+    }
+
     public bool IsGameOver()
     {
         return gameOver;
@@ -210,7 +208,7 @@ public class Game : MonoBehaviour
 
     public void Update()
     {
-        
+
         if (gameOver == true && Input.GetMouseButtonDown(0))
         {
             gameOver = false;
@@ -222,13 +220,15 @@ public class Game : MonoBehaviour
 
     public void Winner(string playerWinner)
     {
-       gameOver = true;
+        gameOver = true;
 
-        //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+        playerWinner = (playerWinner == "white") ? "BLUE" : "RED";
+
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " WINS";
         Debug.Log(playerWinner + " is the winner");
-    //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner";
 
-    //   GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
+        GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
     }
 
 }

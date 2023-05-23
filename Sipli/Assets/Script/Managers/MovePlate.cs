@@ -30,96 +30,14 @@ public class MovePlate : MonoBehaviour
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
 
-        //Destroy the victim Chesspiece
+        // When two pieces collide, resolve combat
         if (attack)
         {
-            GameObject defender = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
             GameObject attacker = reference;
+            GameObject defender = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
 
-            string attackerName = attacker.GetComponent<PieceManager>().name;
-            string defenderName = defender.name;
+            controller.GetComponent<CombatManager>().ResolveCombat(attacker, defender);
 
-            // ResolveCombat(attacker, defender)
-
-            // Same piece battle
-            if (attackerName.Substring(5) == defenderName.Substring(6) || attackerName.Substring(6) == defenderName.Substring(5))
-            {
-
-                if (!(attackerName == "ally_infinity" || attackerName == "enemy_infinity")){
-                    Destroy(attacker);
-                }
-                    Destroy(defender);
-            }
-
-            // Infinity vs Other Piece
-            if (attackerName == "ally_infinity" && defenderName != "enemy_infinity")
-            {
-                Destroy(attacker);
-                controller.GetComponent<Game>().Winner("black");
-            }
-            else if (attackerName == "enemy_infinity" && defenderName != "ally_infinity")
-            {
-                Destroy(attacker);
-                controller.GetComponent<Game>().Winner("white");
-            }
-
-            // Other Piece vs Infinity
-            if (attackerName != "ally_infinity" && defenderName == "enemy_infinity")
-            {
-                Destroy(defender);
-                controller.GetComponent<Game>().Winner("white");
-
-            }
-            else if (attackerName != "enemy_infinity" && defenderName == "ally_infinity")
-            {
-                Destroy(defender);
-                controller.GetComponent<Game>().Winner("black");
-
-            }
-
-            // Infinity vs Infinity
-            if (attackerName == "ally_infinity" && defenderName == "enemy_infinity")
-            {
-                Destroy(defender);
-                controller.GetComponent<Game>().Winner("white");
-            }
-            else if (attackerName == "enemy_infinity" && defenderName == "ally_infinity")
-            {
-                Destroy(defender);
-                controller.GetComponent<Game>().Winner("black");
-            }
-
-            // Scout vs Ninja
-            if ((attackerName == "ally_zero" && defenderName == "enemy_xzero") || (attackerName == "enemy_zero" && defenderName == "ally_xzero"))
-            {
-                Destroy(defender);
-            }
-            // Scout vs Other Piece
-            else if ((attackerName == "ally_zero" && defenderName != "enemy_xzero") || (attackerName == "enemy_zero" && defenderName != "ally_xzero"))
-            {
-                Destroy(attacker);
-            }
-            // Other Piece vs Scout
-            else if ((attackerName != "ally_xzero" && defenderName == "enemy_zero") || (attackerName != "enemy_xzero" && defenderName == "ally_zero"))
-            {
-                Destroy(defender);
-            }
-
-            // Ninja vs Scout
-            if ((attackerName == "ally_xzero" && defenderName == "enemy_zero") || (attackerName == "enemy_xzero" && defenderName == "ally_zero"))
-            {
-                Destroy(attacker);
-            }
-            // Ninja vs Other Piece
-            else if ((attackerName == "ally_xzero" && defenderName != "enemy_zero") || (attackerName == "enemy_xzero" && defenderName != "ally_zero"))
-            {
-                Destroy(defender);
-            }
-            // Other Piece vs Ninja
-            else if ((attackerName != "ally_xzero" && defenderName == "enemy_zero") || (attackerName != "enemy_xzero" && defenderName == "ally_zero"))
-            {
-                Destroy(defender);
-            }
         }
 
         //Set the Chesspiece's original location to be empty

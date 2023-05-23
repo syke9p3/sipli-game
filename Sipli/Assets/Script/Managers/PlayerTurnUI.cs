@@ -19,18 +19,25 @@ public class PlayerTurnUI : MonoBehaviour
 
     void Update()
     {
-
         string currentPlayer = controller.GetComponent<Game>().GetCurrentPlayer();
         Color playerColor = tile.playerColor;
         Color aiColor = tile.aiColor;
 
-        if (currentPlayer == "white")
+        if (controller.GetComponent<Game>().IsGameOver() == false)
         {
-            playerTurnUI.GetComponent<Image>().color = playerColor;
 
+            if (currentPlayer == "white")
+            {
+                playerTurnUI.GetComponent<Image>().color = playerColor;
+
+            }
+            else
+            {
+                playerTurnUI.GetComponent<Image>().color = aiColor;
+            }
         } else
         {
-            playerTurnUI.GetComponent<Image>().color = aiColor;
+            
         }
     }
 }
