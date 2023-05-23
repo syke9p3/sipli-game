@@ -15,7 +15,7 @@ public class PieceManager : MonoBehaviour
     public string player;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
-    public Sprite  enemy_infinity, enemy_xzero, enemy_zero ,enemy_one, enemy_two, enemy_three; // enemy_piece,
+    public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three, enemy_piece;
 
     private int rank;
     public static Dictionary<string, int> pieceRanks;
@@ -34,12 +34,13 @@ public class PieceManager : MonoBehaviour
             case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "white"; break;
             case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "white"; break;
             case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "white"; break;
-            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "black"; break;
-            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "black"; break;
-            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "black"; break;
-            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "black"; break;
-            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "black"; break;
-            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "black"; break;
+
+            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
         }
 
         pieceRanks = new Dictionary<string, int>

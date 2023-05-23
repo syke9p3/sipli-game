@@ -107,13 +107,13 @@ MonoBehaviour:
   ally_one: {fileID: 21300000, guid: f9ba6014ab2005846a5257ad87675ea4, type: 3}
   ally_two: {fileID: 21300000, guid: 6a09f35e6e42b6443888995609f9134b, type: 3}
   ally_three: {fileID: 21300000, guid: 487acad8285495e4ca9a9a921fe34847, type: 3}
-  enemy_piece: {fileID: 21300000, guid: ce4ccc5361f61c44bb896140af453498, type: 3}
   enemy_infinity: {fileID: 21300000, guid: c5d4ee9702d445747955915ff38db049, type: 3}
   enemy_xzero: {fileID: 21300000, guid: d2067afd288bfc342869920784b9bcd2, type: 3}
   enemy_zero: {fileID: 21300000, guid: 5a2b96710f980064c9dcd3f8c4202dc8, type: 3}
   enemy_one: {fileID: 21300000, guid: 5c474a614156d4640b1e92f21e04e386, type: 3}
   enemy_two: {fileID: 21300000, guid: e13f221daabdeef41a16a787fe0556b0, type: 3}
   enemy_three: {fileID: 21300000, guid: c3529df1033fff9419bb0bef5c0139e0, type: 3}
+  enemy_piece: {fileID: 21300000, guid: bd3cfdffe52dbae4c84e7a8615076d17, type: 3}
 --- !u!61 &1891180023002718138
 BoxCollider2D:
   m_ObjectHideFlags: 0

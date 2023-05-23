@@ -102,8 +102,8 @@ public class CombatManager : MonoBehaviour
         }
 
 
-        if ((attackerName.Substring(4) == "infinity" || attackerName.Substring(4) == "xzero" || attackerName.Substring(4) == "xzero") ||
-            (defenderName.Substring(4) == "infinity" || defenderName.Substring(4) == "xzero" || defenderName.Substring(4) == "xzero"))
+        if ((attackerName.Substring(4) == "infinity" || attackerName.Substring(4) == "xzero" || attackerName.Substring(4) == "zero") ||
+            (defenderName.Substring(4) == "infinity" || defenderName.Substring(4) == "xzero" || defenderName.Substring(4) == "zero"))
         {
         } else
         {
