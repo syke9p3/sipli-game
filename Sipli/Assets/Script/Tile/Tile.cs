@@ -6,7 +6,7 @@ public class Tile : MonoBehaviour
 {
     // instead of color, the Sprite should change instead
 
-    [SerializeField] private Color baseColor, playerColor, aiColor;
+    [SerializeField] public Color baseColor, playerColor, aiColor;
     [SerializeField] private SpriteRenderer _renderer;
     [SerializeField] private GameObject highlight;
     [SerializeField] private bool isWalkable;

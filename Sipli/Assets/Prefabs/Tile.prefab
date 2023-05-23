@@ -210,8 +210,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseColor: {r: 0.8679245, g: 0.73192126, b: 0.5764329, a: 1}
-  playerColor: {r: 0.3019608, g: 0.5176471, b: 0.90588236, a: 1}
-  aiColor: {r: 1, g: 0.29803923, b: 0.29803923, a: 1}
+  playerColor: {r: 0.24195442, g: 0.3882351, b: 0.6509434, a: 1}
+  aiColor: {r: 0.6603774, g: 0.30776075, b: 0.30776075, a: 1}
   _renderer: {fileID: 2536451380990793842}
   highlight: {fileID: 445884253345674995}
   isWalkable: 0

@@ -154,6 +154,9 @@ public class Game : MonoBehaviour
         pm.SetXBoard(x);
         pm.SetYBoard(y);
         pm.Activate();
+
+        SetPosition(obj);
+
         return obj;
     }
 
@@ -205,16 +208,7 @@ public class Game : MonoBehaviour
 
     public void Update()
     {
-        //playerTurnUI = GameObject.FindGameObjectWithTag("PlayerTurnUI");
-
-        //if (this.GetCurrentPlayer() == "white")
-        //{
-        //    playerTurnUI.GetComponent<SpriteRenderer>().color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-
-        //} else
-        //{
-        //    playerTurnUI.GetComponent<SpriteRenderer>().color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
-        //}
+        
         
 
         if (gameOver == true && Input.GetMouseButtonDown(0))
@@ -226,14 +220,14 @@ public class Game : MonoBehaviour
         }
     }
 
-    //public void Winner(string playerWinner)
-    //{
-    //   gameOver = true;
+    public void Winner(string playerWinner)
+    {
+       gameOver = true;
 
     //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
     //   GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " is the winner";
 
     //   GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
-    //}
+    }
 
 }

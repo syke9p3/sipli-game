@@ -15,7 +15,7 @@ public class PieceManager : MonoBehaviour
     private string player;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
-    public Sprite enemy_piece;
+    public Sprite enemy_piece, enemy_infinity, enemy_xzero, enemy_one, enemy_two, enemy_three;
 
     public void Activate()
     {
@@ -109,21 +109,13 @@ public class PieceManager : MonoBehaviour
             case "ally_one":
             case "ally_two":
             case "ally_three":
-                PointMovePlate(xBoard, yBoard + 1);
-                PointMovePlate(xBoard, yBoard - 1);
-                PointMovePlate(xBoard - 1, yBoard);
-                PointMovePlate(xBoard + 1, yBoard);
-                break;
             case "enemy_infinity":
             case "enemy_xzero":
             case "enemy_zero":
             case "enemy_one":
             case "enemy_two":
             case "enemy_three":
-                PointMovePlate(xBoard, yBoard + 1);
-                PointMovePlate(xBoard, yBoard - 1);
-                PointMovePlate(xBoard - 1, yBoard);
-                PointMovePlate(xBoard + 1, yBoard);
+                SurroundMovePlate();
                 break;
         }
     }
@@ -143,6 +135,7 @@ public class PieceManager : MonoBehaviour
         {
             GameObject cp = sc.GetPosition(x, y);
 
+            Debug.Log("x: " + x + " y: " + y);
 
             if (cp == null)
             {
@@ -162,6 +155,7 @@ public class PieceManager : MonoBehaviour
 
     public void MovePlateSpawn(int matrixX, int matrixY)
     {
+
         //Get the board value in order to convert to xy coords
         float x = matrixX;
         float y = matrixY;

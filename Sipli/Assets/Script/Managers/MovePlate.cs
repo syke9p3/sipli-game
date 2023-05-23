@@ -35,8 +35,8 @@ public class MovePlate : MonoBehaviour
         {
             GameObject cp = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
 
-            //if (cp.name == "ally_infinity") controller.GetComponent<Game>().Winner("black");
-            //if (cp.name == "enemy_infinity") controller.GetComponent<Game>().Winner("white");
+            if (cp.name == "ally_infinity") controller.GetComponent<Game>().Winner("black");
+            if (cp.name == "enemy_infinity") controller.GetComponent<Game>().Winner("white");
 
             Destroy(cp);
         }
