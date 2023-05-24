@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PieceManager : MonoBehaviour
+public class Piece : MonoBehaviour
 {
     public GameObject controller;
+    public GameObject sipliBoard;
     public GameObject movePlate;
     private bool movePlatesVisible = false;
 
@@ -13,6 +14,7 @@ public class PieceManager : MonoBehaviour
     private int yBoard = -1;
 
     public string player;
+    private bool isHidden;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
     public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three, enemy_piece;
@@ -23,6 +25,7 @@ public class PieceManager : MonoBehaviour
     public void Activate()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
+        sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard");
 
         SetCoords();
 
@@ -35,12 +38,21 @@ public class PieceManager : MonoBehaviour
             case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "white"; break;
             case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "white"; break;
 
-            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+
+            // uncomment if you want the pieces to be shown
+
+            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "black"; break;
+            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "black"; break;
+            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "black"; break;
+            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "black"; break;
+            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "black"; break;
+            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "black"; break;
         }
 
         pieceRanks = new Dictionary<string, int>
@@ -154,7 +166,7 @@ public class PieceManager : MonoBehaviour
 
     public void PointMovePlate(int x, int y)
     {
-        Game sc = controller.GetComponent<Game>();
+        PieceGenerator sc = sipliBoard.GetComponent<PieceGenerator>();
         if (sc.PositionOnBoard(x, y))
         {
             GameObject cp = sc.GetPosition(x, y);
@@ -163,7 +175,7 @@ public class PieceManager : MonoBehaviour
             {
                 MovePlateSpawn(x, y);
             }
-            else if (cp.GetComponent<PieceManager>().player != player)
+            else if (cp.GetComponent<Piece>().player != player)
             {
                 MovePlateAttackSpawn(x, y);
             }
@@ -205,4 +217,14 @@ public class PieceManager : MonoBehaviour
         mpScript.SetCoords(matrixX, matrixY);
     }
 
+    public void GenerateMovePlatesForAIPlayer()
+{
+    if (controller.GetComponent<Game>().GetCurrentPlayer() == player)
+    {
+        InitiateMovePlates();
+        movePlatesVisible = true;
+    }
 }
+}
+
+

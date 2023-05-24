@@ -6,7 +6,12 @@ TagManager:
   tags:
   - PlayerTurnUI
   - MovePlate
-  - Undefined
+  - WinnerText
+  - RestartText
+  - BlackPiece
+  - WhitePiece
+  - PieceGenerator
+  - SipliBoard
   layers:
   - Default
   - TransparentFX

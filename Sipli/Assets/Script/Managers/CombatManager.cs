@@ -17,8 +17,8 @@ public class CombatManager : MonoBehaviour
         // You can access the attacker and defender GameObjects to determine their properties and strengths
 
         // Example combat resolution logic:
-        string attackerName = attacker.GetComponent<PieceManager>().name;
-        string defenderName = defender.GetComponent<PieceManager>().name;
+        string attackerName = attacker.GetComponent<Piece>().name;
+        string defenderName = defender.GetComponent<Piece>().name;
 
         // Same piece battle
         if (attackerName.Substring(4) == defenderName.Substring(4))
@@ -105,11 +105,12 @@ public class CombatManager : MonoBehaviour
         if ((attackerName.Substring(4) == "infinity" || attackerName.Substring(4) == "xzero" || attackerName.Substring(4) == "zero") ||
             (defenderName.Substring(4) == "infinity" || defenderName.Substring(4) == "xzero" || defenderName.Substring(4) == "zero"))
         {
-        } else
+        }
+        else
         {
 
-            int attackerRank = PieceManager.pieceRanks[attackerName];
-            int defenderRank = PieceManager.pieceRanks[defenderName];
+            int attackerRank = Piece.pieceRanks[attackerName];
+            int defenderRank = Piece.pieceRanks[defenderName];
 
             if (attackerRank == defenderRank)
             {
@@ -131,7 +132,7 @@ public class CombatManager : MonoBehaviour
 
 
     }
-    }
+}
 
 
 

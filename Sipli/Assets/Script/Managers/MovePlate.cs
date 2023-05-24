@@ -6,6 +6,7 @@ public class MovePlate : MonoBehaviour
 {
     //Some functions will need reference to the controller
     public GameObject controller;
+    public GameObject sipliBoard;
 
     //The Chesspiece that was tapped to create this MovePlate
     GameObject reference = null;
@@ -29,40 +30,46 @@ public class MovePlate : MonoBehaviour
     public void OnMouseUp()
     {
         controller = GameObject.FindGameObjectWithTag("GameController");
+        sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard");
 
         // When two pieces collide, resolve combat
         if (attack)
         {
             GameObject attacker = reference;
-            GameObject defender = controller.GetComponent<Game>().GetPosition(matrixX, matrixY);
+            GameObject defender = sipliBoard.GetComponent<PieceGenerator>().GetPosition(matrixX, matrixY);
 
             controller.GetComponent<CombatManager>().ResolveCombat(attacker, defender);
 
         }
 
         //Set the Chesspiece's original location to be empty
-        controller.GetComponent<Game>().SetPositionEmpty(reference.GetComponent<PieceManager>().GetXBoard(),
-        reference.GetComponent<PieceManager>().GetYBoard());
+        sipliBoard.GetComponent<PieceGenerator>().SetPositionEmpty(reference.GetComponent<Piece>().GetXBoard(),
+        reference.GetComponent<Piece>().GetYBoard());
 
         //Move reference chess piece to this position
-        reference.GetComponent<PieceManager>().SetXBoard(matrixX);
-        reference.GetComponent<PieceManager>().SetYBoard(matrixY);
-        reference.GetComponent<PieceManager>().SetCoords();
+        reference.GetComponent<Piece>().SetXBoard(matrixX);
+        reference.GetComponent<Piece>().SetYBoard(matrixY);
+        reference.GetComponent<Piece>().SetCoords();
 
         //Update the matrix
-        controller.GetComponent<Game>().SetPosition(reference);
+        sipliBoard.GetComponent<PieceGenerator>().SetPosition(reference);
 
         //Switch Current Player
         controller.GetComponent<Game>().NextTurn();
 
         //Destroy the move plates including self
-        reference.GetComponent<PieceManager>().DestroyMovePlates();
+        reference.GetComponent<Piece>().DestroyMovePlates();
     }
 
     public void SetCoords(int x, int y)
     {
         matrixX = x;
         matrixY = y;
+    }
+
+    public Vector2 GetCoords()
+    {
+        return new Vector2(matrixX, matrixY);
     }
 
     public void SetReference(GameObject obj)
