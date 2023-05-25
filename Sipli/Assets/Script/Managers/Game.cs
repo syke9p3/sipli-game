@@ -88,18 +88,6 @@ public class Game : MonoBehaviour
         currentPlayer = (currentPlayer == "blue") ? "red" : "blue";
     }
 
-
-    public void Winner(string playerWinner)
-    {
-        gameOver = true;
-        playerWinner = (playerWinner == "blue") ? "BLUE" : "RED";
-
-        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
-        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " WINS";
-        Debug.Log(playerWinner + " is the winner");
-        GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
-    }
-
     private bool IsInfinityPieceAtFarthestSide(string player)
     {
         List<GameObject> pieces = sipliBoard.GetPiecesByPlayer(player);
@@ -121,4 +109,28 @@ public class Game : MonoBehaviour
         }
         return false;
     }
+
+    public void Winner(string playerWinner)
+    {
+        gameOver = true;
+        
+        Debug.Log(playerWinner);
+
+        Tile sipliBoardTile = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<Tile>();
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
+
+        if (playerWinner == "blue")
+        {
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().color = sipliBoardTile.playerColor;
+        } else
+        {
+            GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().color = sipliBoardTile.aiColor;
+        }
+
+        playerWinner = (playerWinner == "blue") ? "BLUE" : "RED";
+        GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " WINS";
+        GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
+    }
+
+
 }
