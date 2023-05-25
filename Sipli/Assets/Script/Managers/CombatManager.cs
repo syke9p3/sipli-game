@@ -16,9 +16,11 @@ public class CombatManager : MonoBehaviour
         // Perform combat resolution here based on your game's rules
         // You can access the attacker and defender GameObjects to determine their properties and strengths
 
-        // Example combat resolution logic:
+
         string attackerName = attacker.GetComponent<Piece>().name;
         string defenderName = defender.GetComponent<Piece>().name;
+
+        Debug.Log(attackerName + " vs. " + defenderName);
 
         // Same piece battle
         if (attackerName.Substring(4) == defenderName.Substring(4))
@@ -35,25 +37,25 @@ public class CombatManager : MonoBehaviour
         if (attackerName == "blu_infinity" && defenderName != "red_infinity")
         {
             Destroy(attacker);
-            controller.GetComponent<Game>().Winner("red");
+            controller.GetComponent<Game>().SetPlayerWinner("red");
         }
         else if (attackerName == "red_infinity" && defenderName != "blu_infinity")
         {
             Destroy(attacker);
-            controller.GetComponent<Game>().Winner("blue");
+            controller.GetComponent<Game>().SetPlayerWinner("blue");
         }
 
         // Other Piece vs Infinity
         if (attackerName != "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("blue");
+            controller.GetComponent<Game>().SetPlayerWinner("blue");
 
         }
         else if (attackerName != "red_infinity" && defenderName == "blu_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("red");
+            controller.GetComponent<Game>().SetPlayerWinner("red");
 
         }
 
@@ -61,12 +63,12 @@ public class CombatManager : MonoBehaviour
         if (attackerName == "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("blue");
+            controller.GetComponent<Game>().SetPlayerWinner("blue");
         }
         else if (attackerName == "red_infinity" && defenderName == "blu_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("red");
+            controller.GetComponent<Game>().SetPlayerWinner("red");
         }
 
         // Scout vs Ninja

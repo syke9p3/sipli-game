@@ -67,12 +67,15 @@ public class Piece : MonoBehaviour
         isActive = controller.GetComponent<Game>().GetCurrentPlayer() == player;
 
         HidePiece(isHidden, "red");
-        
+
+        InfinityIsOnOtherSide();
+
+
     }
 
     public void HidePiece(bool isHidden, string player)
     {
-        if (isHidden)
+        if (!isHidden)
         {
             switch (this.name)
             {
@@ -343,6 +346,26 @@ public class Piece : MonoBehaviour
         // Rotate the arrow object to match the movement direction
         float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
         arrow.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f); // Subtract 90 degrees offset
+    }
+
+    public bool InfinityIsOnOtherSide() { 
+    
+        if (this.name == "blu_infinity" && this.yBoard == 4)
+        {
+            Debug.Log("Blue Wins - infinity invasion");
+            controller.GetComponent<Game>().Winner("blue");
+            return true;
+        } 
+        else if (this.name == "red_infinity" && this.yBoard == 0)
+        {
+            Debug.Log("Red Wins - infinity invasion");
+            controller.GetComponent<Game>().Winner("red");
+            return true;
+        } else
+        {
+            return false;
+        }
+
     }
 }
 

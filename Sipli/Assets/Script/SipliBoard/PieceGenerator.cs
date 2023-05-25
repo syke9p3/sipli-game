@@ -18,7 +18,6 @@ public class PieceGenerator : MonoBehaviour
 
     private void Update()
     {
-        
     }
 
     public void GeneratePieces()

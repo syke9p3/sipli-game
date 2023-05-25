@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,8 +24,19 @@ public class AIPlayer : MonoBehaviour
         Game cp = controller.GetComponent<Game>();
         if (cp.GetCurrentPlayer() == "red" && cp.IsGameOver() == false)
         {
+            Delay1();
             MakeMove();
         }
+    }
+
+    public void Delay1()
+    {
+        StartCoroutine(Delay2());
+    }
+
+    private IEnumerator Delay2()
+    {
+        yield return new WaitForSeconds(1f);
     }
 
     public void MakeMove()

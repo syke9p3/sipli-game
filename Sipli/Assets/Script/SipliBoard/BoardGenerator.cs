@@ -23,6 +23,16 @@ public class BoardGenerator : MonoBehaviour
 
     }
 
+    public int GetWidth()
+    {
+        return width;
+    }
+    
+    public int GetHeight()
+    {
+        return height;
+    }
+
     public void GenerateGrid()
     {
         tiles = new Dictionary<Vector2, Tile>();
