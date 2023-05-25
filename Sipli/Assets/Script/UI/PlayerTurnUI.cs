@@ -26,7 +26,7 @@ public class PlayerTurnUI : MonoBehaviour
         if (controller.GetComponent<Game>().IsGameOver() == false)
         {
 
-            if (currentPlayer == "white")
+            if (currentPlayer == "blue")
             {
                 playerTurnUI.GetComponent<Image>().color = playerColor;
 

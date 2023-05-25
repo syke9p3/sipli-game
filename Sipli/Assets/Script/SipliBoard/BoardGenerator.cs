@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class BoardGenerator : MonoBehaviour
 {
     [SerializeField] public int width, height;
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private Transform cam;
 
-    public static GridManager Instance;
+    public static BoardGenerator Instance;
     private Dictionary<Vector2, Tile> tiles;
 
     void Awake()

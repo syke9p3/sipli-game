@@ -35,25 +35,25 @@ public class CombatManager : MonoBehaviour
         if (attackerName == "blu_infinity" && defenderName != "red_infinity")
         {
             Destroy(attacker);
-            controller.GetComponent<Game>().Winner("black");
+            controller.GetComponent<Game>().Winner("red");
         }
         else if (attackerName == "red_infinity" && defenderName != "blu_infinity")
         {
             Destroy(attacker);
-            controller.GetComponent<Game>().Winner("white");
+            controller.GetComponent<Game>().Winner("blue");
         }
 
         // Other Piece vs Infinity
         if (attackerName != "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("white");
+            controller.GetComponent<Game>().Winner("blue");
 
         }
         else if (attackerName != "red_infinity" && defenderName == "blu_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("black");
+            controller.GetComponent<Game>().Winner("red");
 
         }
 
@@ -61,12 +61,12 @@ public class CombatManager : MonoBehaviour
         if (attackerName == "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("white");
+            controller.GetComponent<Game>().Winner("blue");
         }
         else if (attackerName == "red_infinity" && defenderName == "blu_infinity")
         {
             Destroy(defender);
-            controller.GetComponent<Game>().Winner("black");
+            controller.GetComponent<Game>().Winner("red");
         }
 
         // Scout vs Ninja

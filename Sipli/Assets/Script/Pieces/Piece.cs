@@ -14,13 +14,15 @@ public class Piece : MonoBehaviour
     private int yBoard = -1;
 
     public string player;
-    private bool isHidden;
+    private bool isActive;
+    private bool isHidden = false;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
     public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three, enemy_piece;
 
     private int rank;
     public static Dictionary<string, int> pieceRanks;
+
 
     public void Activate()
     {
@@ -31,28 +33,28 @@ public class Piece : MonoBehaviour
 
         switch (this.name)
         {
-            case "blu_infinity": this.GetComponent<SpriteRenderer>().sprite = ally_infinity; player = "white"; break;
-            case "blu_xzero": this.GetComponent<SpriteRenderer>().sprite = ally_xzero; player = "white"; break;
-            case "blu_zero": this.GetComponent<SpriteRenderer>().sprite = ally_zero; player = "white"; break;
-            case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "white"; break;
-            case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "white"; break;
-            case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "white"; break;
+            case "blu_infinity": this.GetComponent<SpriteRenderer>().sprite = ally_infinity; player = "blue"; break;
+            case "blu_xzero": this.GetComponent<SpriteRenderer>().sprite = ally_xzero; player = "blue"; break;
+            case "blu_zero": this.GetComponent<SpriteRenderer>().sprite = ally_zero; player = "blue"; break;
+            case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "blue"; break;
+            case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "blue"; break;
+            case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "blue"; break;
 
-            //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
-            //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "black"; break;
+            //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
 
             // uncomment if you want the pieces to be shown
 
-            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "black"; break;
-            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "black"; break;
-            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "black"; break;
-            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "black"; break;
-            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "black"; break;
-            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "black"; break;
+            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
+            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
+            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
+            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
+            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
+            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
         }
 
         pieceRanks = new Dictionary<string, int>
@@ -64,12 +66,64 @@ public class Piece : MonoBehaviour
             { "red_two", 4 },
             { "red_three", 5 }
         };
+
+
     }
 
+    private void Update()
+    {
+        isActive = controller.GetComponent<Game>().GetCurrentPlayer() == player;
+
+        if (isHidden)
+        {
+            switch (this.name)
+            {
+                case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+                case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+                case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+                case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+                case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+                case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            }
+        }
+        else
+        {
+            switch (this.name)
+            {
+                case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
+                case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
+                case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
+                case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
+                case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
+                case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
+            }
+        }
+        
+    }
+
+    public bool GetIsActive()
+    {
+        return isActive;
+    }
+    
+    public bool GetIsHidden()
+    {
+        return isHidden;
+    }
+
+    public void SetIsHidden()
+    {
+        isHidden = (isHidden == false) ? true : false;
+    }
 
     public int GetRank()
     {
         return rank;
+    }
+
+    public string GetPlayer()
+    {
+        return player;
     }
 
     public void SetCoords()
@@ -135,8 +189,15 @@ public class Piece : MonoBehaviour
         }
     }
 
-    public void InitiateMovePlates()
+    public bool InitiateMovePlates()
     {
+        if (!isActive)
+        {
+            return false;
+        }
+
+        // Logic to initiate move plates...
+
         switch (this.name)
         {
             case "blu_infinity":
@@ -154,6 +215,9 @@ public class Piece : MonoBehaviour
                 SurroundMovePlate();
                 break;
         }
+
+        return true; // Move plates successfully initiated
+
     }
 
     public void SurroundMovePlate()
@@ -217,14 +281,25 @@ public class Piece : MonoBehaviour
         mpScript.SetCoords(matrixX, matrixY);
     }
 
-    public void GenerateMovePlatesForAIPlayer()
-{
-    if (controller.GetComponent<Game>().GetCurrentPlayer() == player)
+    public void MoveTo(int x, int y)
     {
-        InitiateMovePlates();
-        movePlatesVisible = true;
+        // Set the Chesspiece's original location to be empty
+        sipliBoard.GetComponent<PieceGenerator>().SetPositionEmpty(GetXBoard(), GetYBoard());
+
+        // Move the piece to the new position
+        SetXBoard(x);
+        SetYBoard(y);
+        SetCoords();
+
+        // Update the matrix
+        sipliBoard.GetComponent<PieceGenerator>().SetPosition(gameObject);
+
+        // Switch to the next player's turn
+        controller.GetComponent<Game>().NextTurn();
+
+        // Destroy the move plates
+        DestroyMovePlates();
     }
-}
 }
 
 

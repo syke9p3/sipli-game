@@ -9,10 +9,16 @@ public class PieceGenerator : MonoBehaviour
     public GameObject[,] positions = new GameObject[5, 5];
     private string[] allyPieces = new string[9];
     private string[] enemyPieces = new string[9];
+    private bool hide;
 
     private void Start()
     {
         GeneratePieces();
+    }
+
+    private void Update()
+    {
+        
     }
 
     public void GeneratePieces()
@@ -135,4 +141,26 @@ public class PieceGenerator : MonoBehaviour
 
         return true;
     }
+
+    public List<GameObject> GetPiecesByPlayer(string playerColor)
+    {
+        List<GameObject> pieces = new List<GameObject>();
+
+        for (int x = 0; x < positions.GetLength(0); x++)
+        {
+            for (int y = 0; y < positions.GetLength(1); y++)
+            {
+                GameObject piece = positions[x, y];
+
+                if (piece != null && piece.GetComponent<Piece>().GetCurrentPlayer() == playerColor)
+                {
+                    pieces.Add(piece);
+                }
+            }
+        }
+
+        return pieces;
+    }
+
 }
+

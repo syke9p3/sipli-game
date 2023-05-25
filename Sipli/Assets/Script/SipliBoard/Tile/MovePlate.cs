@@ -67,6 +67,16 @@ public class MovePlate : MonoBehaviour
         matrixY = y;
     }
 
+    public int GetX()
+    {
+        return matrixX;
+    }
+
+    public int GetY()
+    {
+        return matrixY;
+    }
+
     public Vector2 GetCoords()
     {
         return new Vector2(matrixX, matrixY);
