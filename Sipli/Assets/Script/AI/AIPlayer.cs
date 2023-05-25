@@ -78,7 +78,10 @@ public class AIPlayer : MonoBehaviour
 
             // Make the move by calling the necessary methods
             selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
-        }
+
+            // Generate the movement arrow
+            selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+            }
         else
         {
             // No valid non-attack moves, try to find attack move plates
@@ -112,8 +115,10 @@ public class AIPlayer : MonoBehaviour
 
                 // Move the attacking piece to the target position
                 selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+                selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+
+                }
             }
-        }
     }
 }
 

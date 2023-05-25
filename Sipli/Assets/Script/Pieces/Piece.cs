@@ -8,21 +8,23 @@ public class Piece : MonoBehaviour
     public GameObject controller;
     public GameObject sipliBoard;
     public GameObject movePlate;
+    public GameObject arrowPrefab;
+
     private bool movePlatesVisible = false;
 
     private int xBoard = -1;
     private int yBoard = -1;
+    private Vector3 previousPosition;
 
     public string player;
     private bool isActive;
-    private bool isHidden = false;
+    public bool isHidden = false;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
     public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three, enemy_piece;
 
     private int rank;
     public static Dictionary<string, int> pieceRanks;
-
 
     public void Activate()
     {
@@ -39,16 +41,6 @@ public class Piece : MonoBehaviour
             case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "blue"; break;
             case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "blue"; break;
             case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "blue"; break;
-
-            //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-            //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-            //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-            //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-            //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-            //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-
-            // uncomment if you want the pieces to be shown
-
             case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
             case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
             case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
@@ -74,7 +66,24 @@ public class Piece : MonoBehaviour
     {
         isActive = controller.GetComponent<Game>().GetCurrentPlayer() == player;
 
+        HidePiece(isHidden, "red");
+        
+    }
+
+    public void HidePiece(bool isHidden, string player)
+    {
         if (isHidden)
+        {
+            switch (this.name)
+            {
+                case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
+                case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
+                case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
+                case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
+                case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
+                case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
+            }
+        } else
         {
             switch (this.name)
             {
@@ -86,19 +95,6 @@ public class Piece : MonoBehaviour
                 case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
             }
         }
-        else
-        {
-            switch (this.name)
-            {
-                case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
-                case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
-                case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
-                case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
-                case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
-                case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
-            }
-        }
-        
     }
 
     public bool GetIsActive()
@@ -283,6 +279,27 @@ public class Piece : MonoBehaviour
 
     public void MoveTo(int x, int y)
     {
+
+        // Store the previous position before moving
+        previousPosition = transform.position;
+
+
+        // Check if the target position is valid
+        if (!sipliBoard.GetComponent<PieceGenerator>().PositionOnBoard(x, y))
+        {
+            Debug.Log("Invalid move: Target position is outside the board.");
+            return;
+        }
+
+        GameObject targetPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(x, y);
+
+        // Check if the target position is occupied by an ally piece
+        if (targetPiece != null && targetPiece.GetComponent<Piece>().GetPlayer() == player)
+        {
+            Debug.Log("Invalid move: Target position is occupied by an ally piece.");
+            return;
+        }
+
         // Set the Chesspiece's original location to be empty
         sipliBoard.GetComponent<PieceGenerator>().SetPositionEmpty(GetXBoard(), GetYBoard());
 
@@ -294,11 +311,38 @@ public class Piece : MonoBehaviour
         // Update the matrix
         sipliBoard.GetComponent<PieceGenerator>().SetPosition(gameObject);
 
+        // Attack the target piece if it exists
+        if (targetPiece != null)
+        {
+            Destroy(targetPiece);
+        }
+
         // Switch to the next player's turn
         controller.GetComponent<Game>().NextTurn();
 
         // Destroy the move plates
         DestroyMovePlates();
+    }
+
+    public void GenerateMovementArrow()
+    {
+
+        GameObject[] arrows = GameObject.FindGameObjectsWithTag("Arrow");
+
+        foreach(GameObject i in arrows)
+        {
+            Destroy(i);
+        }
+
+        // Instantiate the arrow object or sprite at the previous position
+        GameObject arrow = Instantiate(arrowPrefab, previousPosition, Quaternion.identity);
+
+        // Determine the direction of movement
+        Vector3 movementDirection = transform.position - previousPosition;
+
+        // Rotate the arrow object to match the movement direction
+        float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
+        arrow.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f); // Subtract 90 degrees offset
     }
 }
 

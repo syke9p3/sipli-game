@@ -99,8 +99,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  sipliBoard: {fileID: 0}
   movePlate: {fileID: 1432803286599994501, guid: 15be2159a4d780d4ab10cc51c667930a, type: 3}
+  arrowPrefab: {fileID: 4638801510412556210, guid: 214f196c9d8c2d04a84ed4c1f369423a, type: 3}
   player: 
+  isHidden: 0
   ally_infinity: {fileID: 21300000, guid: 947778dbf2a6421438b71ca0711d909e, type: 3}
   ally_xzero: {fileID: 21300000, guid: f60a6ba379fcfd741a05f18f124dc81a, type: 3}
   ally_zero: {fileID: 21300000, guid: 42fd33f4de810cb4ca9dfaf04bb0c251, type: 3}
