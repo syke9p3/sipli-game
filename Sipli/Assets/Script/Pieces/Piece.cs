@@ -41,12 +41,12 @@ public class Piece : MonoBehaviour
             case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "blue"; break;
             case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "blue"; break;
             case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "blue"; break;
-            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
-            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
-            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
-            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
-            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
-            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
+            case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
         }
 
         pieceRanks = new Dictionary<string, int>
@@ -68,14 +68,11 @@ public class Piece : MonoBehaviour
 
         HidePiece(isHidden, "red");
 
-        InfinityIsOnOtherSide();
-
-
     }
 
     public void HidePiece(bool isHidden, string player)
     {
-        if (!isHidden)
+        if (isHidden)
         {
             switch (this.name)
             {
@@ -86,7 +83,8 @@ public class Piece : MonoBehaviour
                 case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
                 case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
             }
-        } else
+        } 
+        else
         {
             switch (this.name)
             {
@@ -156,7 +154,7 @@ public class Piece : MonoBehaviour
         return player;
     }
 
-    private void OnMouseUp()
+    private void OnMouseDown()
     {
         if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
         {
@@ -314,12 +312,6 @@ public class Piece : MonoBehaviour
         // Update the matrix
         sipliBoard.GetComponent<PieceGenerator>().SetPosition(gameObject);
 
-        // Attack the target piece if it exists
-        if (targetPiece != null)
-        {
-            Destroy(targetPiece);
-        }
-
         // Switch to the next player's turn
         controller.GetComponent<Game>().NextTurn();
 
@@ -348,25 +340,7 @@ public class Piece : MonoBehaviour
         arrow.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f); // Subtract 90 degrees offset
     }
 
-    public bool InfinityIsOnOtherSide() { 
-    
-        if (this.name == "blu_infinity" && this.yBoard == 4)
-        {
-            Debug.Log("Blue Wins - infinity invasion");
-            controller.GetComponent<Game>().Winner("blue");
-            return true;
-        } 
-        else if (this.name == "red_infinity" && this.yBoard == 0)
-        {
-            Debug.Log("Red Wins - infinity invasion");
-            controller.GetComponent<Game>().Winner("red");
-            return true;
-        } else
-        {
-            return false;
-        }
 
-    }
 }
 
 

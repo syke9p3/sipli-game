@@ -43,14 +43,10 @@ public class PlayerTurnUI : MonoBehaviour
             if (winner == "blue")
             {
                 playerTurnUI.GetComponent<Image>().color = playerColor;
-                Debug.Log("playerturn ui winner blue");
-
             }
             else
             {
                 playerTurnUI.GetComponent<Image>().color = aiColor;
-                Debug.Log("playerturn ui winner red");
-
             }
 
         }

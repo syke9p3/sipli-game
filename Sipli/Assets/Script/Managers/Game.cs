@@ -12,8 +12,7 @@ public class Game : MonoBehaviour
     private string playerWinner;
     private bool gameOver = false;
 
-    public bool hideRedPieces = true;
-
+    public bool hideRedPieces = false;
 
     private void Start()
     {
@@ -28,11 +27,9 @@ public class Game : MonoBehaviour
             SceneManager.LoadScene("vsAIGame");
         }
 
-        if (hideRedPieces)
-        {
-            HidePieces("red");
-            hideRedPieces = false;
-        }
+        
+            HidePieces("red", hideRedPieces);
+            hideRedPieces = true;
 
         if (playerWinner != null)
         {
@@ -53,13 +50,17 @@ public class Game : MonoBehaviour
     }
 
 
-    public void HidePieces(string player)
+    public void HidePieces(string player, bool hide)
     {
-        List<GameObject> pieces = sipliBoard.GetPiecesByPlayer(player);
 
-        foreach (GameObject piece in pieces)
+        if (hide)
         {
-            piece.GetComponent<Piece>().SetIsHidden();
+            List<GameObject> pieces = sipliBoard.GetPiecesByPlayer(player);
+
+            foreach (GameObject piece in pieces)
+            {
+                piece.GetComponent<Piece>().SetIsHidden();
+            }
         }
     }
 
@@ -114,8 +115,6 @@ public class Game : MonoBehaviour
     {
         gameOver = true;
         
-        Debug.Log(playerWinner);
-
         Tile sipliBoardTile = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<Tile>();
         GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
 

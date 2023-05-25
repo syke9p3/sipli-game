@@ -16,7 +16,6 @@ public class CombatManager : MonoBehaviour
         // Perform combat resolution here based on your game's rules
         // You can access the attacker and defender GameObjects to determine their properties and strengths
 
-
         string attackerName = attacker.GetComponent<Piece>().name;
         string defenderName = defender.GetComponent<Piece>().name;
 
@@ -32,9 +31,8 @@ public class CombatManager : MonoBehaviour
             }
             Destroy(defender);
         }
-
         // Infinity vs Other Piece
-        if (attackerName == "blu_infinity" && defenderName != "red_infinity")
+        else if (attackerName == "blu_infinity" && defenderName != "red_infinity")
         {
             Destroy(attacker);
             controller.GetComponent<Game>().SetPlayerWinner("red");
@@ -44,23 +42,19 @@ public class CombatManager : MonoBehaviour
             Destroy(attacker);
             controller.GetComponent<Game>().SetPlayerWinner("blue");
         }
-
         // Other Piece vs Infinity
-        if (attackerName != "blu_infinity" && defenderName == "red_infinity")
+        else if (attackerName != "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
             controller.GetComponent<Game>().SetPlayerWinner("blue");
-
         }
         else if (attackerName != "red_infinity" && defenderName == "blu_infinity")
         {
             Destroy(defender);
             controller.GetComponent<Game>().SetPlayerWinner("red");
-
         }
-
         // Infinity vs Infinity
-        if (attackerName == "blu_infinity" && defenderName == "red_infinity")
+        else if (attackerName == "blu_infinity" && defenderName == "red_infinity")
         {
             Destroy(defender);
             controller.GetComponent<Game>().SetPlayerWinner("blue");
@@ -70,9 +64,8 @@ public class CombatManager : MonoBehaviour
             Destroy(defender);
             controller.GetComponent<Game>().SetPlayerWinner("red");
         }
-
         // Scout vs Ninja
-        if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) == "xzero"))
+        else if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) == "xzero"))
         {
             Destroy(defender);
         }
@@ -85,32 +78,29 @@ public class CombatManager : MonoBehaviour
         else if ((attackerName.Substring(4) != "xzero" && defenderName.Substring(4) == "zero"))
         {
             Destroy(defender);
-        }
 
+        }
         // Ninja vs Scout
-        if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) == "zero"))
+        else if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) == "zero"))
         {
             Destroy(attacker);
+
         }
         // Ninja vs Other Piece
         else if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) != "zero"))
         {
             Destroy(defender);
+
         }
         // Other Piece vs Ninja
         else if ((attackerName.Substring(4) != "zero" && defenderName.Substring(4) == "xzero"))
         {
             Destroy(attacker);
+
         }
-
-
-        if ((attackerName.Substring(4) == "infinity" || attackerName.Substring(4) == "xzero" || attackerName.Substring(4) == "zero") ||
-            (defenderName.Substring(4) == "infinity" || defenderName.Substring(4) == "xzero" || defenderName.Substring(4) == "zero"))
+        // Compare ranks of non-special pieces
+        else if (Piece.pieceRanks.ContainsKey(attackerName) && Piece.pieceRanks.ContainsKey(defenderName))
         {
-        }
-        else
-        {
-
             int attackerRank = Piece.pieceRanks[attackerName];
             int defenderRank = Piece.pieceRanks[defenderName];
 
@@ -119,20 +109,21 @@ public class CombatManager : MonoBehaviour
                 // Same rank, destroy both pieces
                 Destroy(attacker);
                 Destroy(defender);
+
             }
             else if (attackerRank > defenderRank)
             {
                 // Attacker wins, destroy defender
                 Destroy(defender);
+
             }
             else
             {
                 // Defender wins, destroy attacker
                 Destroy(attacker);
+
             }
         }
-
-
     }
 }
 

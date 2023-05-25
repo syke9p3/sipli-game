@@ -44,7 +44,7 @@ public class BoardGenerator : MonoBehaviour
                 spawnedTile.name = $"Tile {x} {y}";
 
                 string color = "";
-                if (x >= 0 && y >=3)
+                if (x >= 0 && y >= height - 2)
                 {
                     color = "aiColor";
                 }
