@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AIPlayer : MonoBehaviour
@@ -10,28 +11,49 @@ public class AIPlayer : MonoBehaviour
     private GameObject controller;
     private GameObject sipliBoard;
 
+    public string teamColor;
+
     private void Start()
     {
         pieceGenerator = GetComponent<PieceGenerator>();
         controller = GameObject.FindGameObjectWithTag("GameController");
+        game = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>(); ;
         sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard");
-        game = GetComponent<Game>();
     }
 
     private void Update()
     {
 
         Game cp = controller.GetComponent<Game>();
-        if (cp.GetCurrentPlayer() == "red" && cp.IsGameOver() == false)
+        if (cp.GetCurrentPlayer() == teamColor && cp.IsGameOver() == false)
         {
-            MakeMove();
-        }
+            MakeRandomMove();
+        } 
+        
     }
 
-    public void MakeMove()
+    public static async Task AddDelayExample()
+    {
+ 
+        await Task.Delay(500);
+
+    }
+
+    /***
+     * 
+     * 1. Get all pieces controlled by the AI player
+     * 2. Filter out pieces without valid moves
+     * 3. Generate move plates for all pieces with valid moves
+     * 4. Select a move from the legal moveplates
+     * 5. 
+     * 
+     * 
+     */
+
+    public void MakeRandomMove()
     {
         // Get all pieces controlled by the AI player
-        List<GameObject> aiPieces = sipliBoard.GetComponent<PieceGenerator>().GetPiecesByPlayer("red");
+        List<GameObject> aiPieces = sipliBoard.GetComponent<PieceGenerator>().GetPiecesByPlayer(teamColor);
 
         // Filter out pieces without valid moves
         List<GameObject> piecesWithMoves = aiPieces.Where(piece => piece.GetComponent<Piece>().InitiateMovePlates()).ToList();
@@ -49,12 +71,13 @@ public class AIPlayer : MonoBehaviour
 
             // Filter out move plates that lead to occupied spaces
             List<GameObject> validMovePlates = new List<GameObject>();
+            List<GameObject> validNonAttackMovePlates = new List<GameObject>();
 
             foreach (GameObject movePlate in movePlates)
             {
                 MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
 
-                if (!movePlateScript.attack && movePlateScript.GetReference() == selectedPiece)
+                if (movePlateScript.GetReference() == selectedPiece)
                 {
                     int targetX = movePlateScript.GetX();
                     int targetY = movePlateScript.GetY();
@@ -63,63 +86,335 @@ public class AIPlayer : MonoBehaviour
                     if (sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY) == null)
                     {
                         validMovePlates.Add(movePlate);
+
+                        if (!movePlateScript.attack)
+                        {
+                            validNonAttackMovePlates.Add(movePlate);
+                        }
                     }
                 }
             }
+
+            Task.Run(async delegate
+            {
+                await AddDelayExample();
+            }).Wait();
+
+            float attackProbability = 0.7f;
 
             if (validMovePlates.Count > 0)
             {
-                // Select a random valid move plate
-                GameObject selectedMovePlate = validMovePlates[Random.Range(0, validMovePlates.Count)];
-
-                // Get the coordinates of the selected move plate
-                MovePlate movePlateScript = selectedMovePlate.GetComponent<MovePlate>();
-                int targetX = movePlateScript.GetX();
-                int targetY = movePlateScript.GetY();
-
-                // Make the move by calling the necessary methods
-                selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
-
-                // Generate the movement arrow
-                selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
-            }
-            else
-            {
-                // No valid non-attack moves, try to find attack move plates
-                List<GameObject> attackPlates = new List<GameObject>();
-
-                foreach (GameObject movePlate in movePlates)
+                // Check if the selected piece is an "infinity" piece
+                if (selectedPiece.GetComponent<Piece>().GetName().Contains("_infinity"))
                 {
-                    MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
-
-                    if (movePlateScript.attack && movePlateScript.GetReference() == selectedPiece)
-                    {
-                        attackPlates.Add(movePlate);
-                    }
+                    // Reduce the attack probability for "infinity" pieces
+                    attackProbability = 0.3f;
                 }
 
-                if (attackPlates.Count > 0)
+                if (validNonAttackMovePlates.Count > 0 && Random.value <= attackProbability)
                 {
-                    // Select a random attack move plate
-                    GameObject selectedMovePlate = attackPlates[Random.Range(0, attackPlates.Count)];
+                    // Select a random valid non-attack move plate
+                    GameObject selectedMovePlate = validNonAttackMovePlates[Random.Range(0, validNonAttackMovePlates.Count)];
 
                     // Get the coordinates of the selected move plate
                     MovePlate movePlateScript = selectedMovePlate.GetComponent<MovePlate>();
                     int targetX = movePlateScript.GetX();
                     int targetY = movePlateScript.GetY();
 
-                    // Get the attacked piece
-                    GameObject attackedPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
+                    // Create a new MoveData object for the move
+                    MoveData moveData = new MoveData(selectedPiece, selectedPiece.GetComponent<Piece>().GetXBoard(), selectedPiece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
 
-                    // Resolve combat between the attacking and defending pieces
-                    controller.GetComponent<CombatManager>().ResolveCombat(selectedPiece, attackedPiece);
-
-                    // Move the attacking piece to the target position
+                    // Make the move by calling the necessary methods
                     selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+
+                    // Generate the movement arrow
                     selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+
+                    // Push the move data to the move stack
+                    game.moveStack.Push(moveData);
+                    
+                }
+                else
+                {
+                    // No valid non-attack moves, try to find attack move plates
+                    List<GameObject> attackPlates = new List<GameObject>();
+
+                    foreach (GameObject movePlate in movePlates)
+                    {
+                        MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                        if (movePlateScript.attack && movePlateScript.GetReference() == selectedPiece)
+                        {
+                            attackPlates.Add(movePlate);
+                        }
+                    }
+
+                    if (attackPlates.Count > 0)
+                    {
+                        // Select a random attack move plate
+                        GameObject selectedMovePlate = attackPlates[Random.Range(0, attackPlates.Count)];
+
+                        // Get the coordinates of the selected move plate
+                        MovePlate movePlateScript = selectedMovePlate.GetComponent<MovePlate>();
+                        int targetX = movePlateScript.GetX();
+                        int targetY = movePlateScript.GetY();
+
+                        // Get the attacked piece
+                        GameObject attackedPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
+
+                        // Resolve combat between the attacking and defending pieces
+                        controller.GetComponent<CombatManager>().ResolveCombat(selectedPiece, attackedPiece);
+
+                        // Create a new MoveData object for the move
+                        MoveData moveData = new MoveData(selectedPiece, selectedPiece.GetComponent<Piece>().GetXBoard(), selectedPiece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
+
+                        // Set the combat data for the move
+                        moveData.SetCombatData(true, attackedPiece);
+
+                        // Move the attacking piece to the target position
+                        selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+                        selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+
+                        // Push the move data to the move stack
+                        game.moveStack.Push(moveData);
+                    }
                 }
             }
         }
+    }
+
+    public void MakeMinimaxMove()
+    {
+        // Get all pieces controlled by the AI player
+        List<GameObject> aiPieces = sipliBoard.GetComponent<PieceGenerator>().GetPiecesByPlayer(teamColor);
+
+        // Filter out pieces without valid moves
+        List<GameObject> piecesWithMoves = aiPieces.Where(piece => piece.GetComponent<Piece>().InitiateMovePlates()).ToList();
+
+        if (piecesWithMoves.Count > 0)
+        {
+            // Select a random piece from the pieces with valid moves
+            GameObject selectedPiece = piecesWithMoves[Random.Range(0, piecesWithMoves.Count)];
+
+            // Get the move plates for the selected piece
+            selectedPiece.GetComponent<Piece>().InitiateMovePlates();
+
+            // Get the move plates generated by the selected piece
+            GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+
+            // Filter out move plates that lead to occupied spaces
+            List<GameObject> validMovePlates = new List<GameObject>();
+            List<GameObject> validNonAttackMovePlates = new List<GameObject>();
+
+            foreach (GameObject movePlate in movePlates)
+            {
+                MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                if (movePlateScript.GetReference() == selectedPiece)
+                {
+                    int targetX = movePlateScript.GetX();
+                    int targetY = movePlateScript.GetY();
+
+                    // Check if the target position is empty
+                    if (sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY) == null)
+                    {
+                        validMovePlates.Add(movePlate);
+
+                        if (!movePlateScript.attack)
+                        {
+                            validNonAttackMovePlates.Add(movePlate);
+                        }
+                    }
+                }
+            }
+
+            Task.Run(async delegate
+            {
+                await AddDelayExample();
+            }).Wait();
+
+            float attackProbability = 0.7f;
+
+            if (validMovePlates.Count > 0)
+            {
+                // Check if the selected piece is an "infinity" piece
+                if (selectedPiece.GetComponent<Piece>().GetName().Contains("_infinity"))
+                {
+                    // Reduce the attack probability for "infinity" pieces
+                    attackProbability = 0.3f;
+                }
+
+                if (validNonAttackMovePlates.Count > 0 && Random.value <= attackProbability)
+                {
+                    // Select a random valid non-attack move plate
+                    GameObject selectedMovePlate = validNonAttackMovePlates[Random.Range(0, validNonAttackMovePlates.Count)];
+
+                    // Get the coordinates of the selected move plate
+                    MovePlate movePlateScript = selectedMovePlate.GetComponent<MovePlate>();
+                    int targetX = movePlateScript.GetX();
+                    int targetY = movePlateScript.GetY();
+
+                    // Make the move by calling the necessary methods
+                    selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+
+                    // Generate the movement arrow
+                    selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+                }
+                else
+                {
+                    // No valid non-attack moves, try to find the best attack move
+                    float bestScore = float.MinValue;
+                    GameObject bestMovePlate = null;
+
+                    foreach (GameObject movePlate in movePlates)
+                    {
+                        MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                        if (movePlateScript.attack && movePlateScript.GetReference() == selectedPiece)
+                        {
+                            // Get the coordinates of the move plate
+                            int targetX = movePlateScript.GetX();
+                            int targetY = movePlateScript.GetY();
+
+                            // Get the attacked piece
+                            GameObject attackedPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
+
+                            // Simulate the move and evaluate the resulting game state
+                            float score = Minimax(selectedPiece, attackedPiece, true, int.MinValue, int.MaxValue);
+
+                            // Update the best move if necessary
+                            if (score > bestScore)
+                            {
+                                bestScore = score;
+                                bestMovePlate = movePlate;
+                            }
+                        }
+                    }
+
+                    if (bestMovePlate != null)
+                    {
+                        // Get the coordinates of the selected move plate
+                        MovePlate movePlateScript = bestMovePlate.GetComponent<MovePlate>();
+                        int targetX = movePlateScript.GetX();
+                        int targetY = movePlateScript.GetY();
+
+                        // Get the attacked piece
+                        GameObject attackedPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
+
+                        // Resolve combat between the attacking and defending pieces
+                        controller.GetComponent<CombatManager>().ResolveCombat(selectedPiece, attackedPiece);
+
+                        // Move the attacking piece to the target position
+                        selectedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+                        selectedPiece.GetComponent<Piece>().GenerateMovementArrow();
+                    }
+                }
+            }
+        }
+    }
+
+    private float Minimax(GameObject attacker, GameObject defender, bool maximizingPlayer, float alpha, float beta)
+    {
+        // Check if the maximum depth or game end has been reached
+        if (game.IsGameOver()) // (depth == maxDepth || game.IsGameOver())
+        {
+            // Evaluate the game state and return the score
+            return EvaluateGameState();
+        }
+
+        // Get the move plates for the attacker
+        attacker.GetComponent<Piece>().InitiateMovePlates();
+
+        // Get the move plates generated by the attacker
+        GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+
+        if (maximizingPlayer)
+        {
+            float maxEval = float.MinValue;
+
+            foreach (GameObject movePlate in movePlates)
+            {
+                MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                if (movePlateScript.attack && movePlateScript.GetReference() == attacker)
+                {
+                    // Get the coordinates of the move plate
+                    int targetX = movePlateScript.GetX();
+                    int targetY = movePlateScript.GetY();
+
+                    // Get the attacked piece
+                    GameObject attackedPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
+
+                    // Simulate the attack move
+                    controller.GetComponent<CombatManager>().ResolveCombat(attacker, attackedPiece);
+                    attacker.GetComponent<Piece>().MoveTo(targetX, targetY);
+
+                    // Recursive call to Minimax for the next depth
+                    float eval = Minimax(attacker, defender, false, alpha, beta);
+                    maxEval = Mathf.Max(maxEval, eval);
+
+                    // Undo the attack move
+                    attacker.GetComponent<Piece>().MoveTo(attacker.GetComponent<Piece>().GetXBoard(), attacker.GetComponent<Piece>().GetYBoard());
+                    //controller.GetComponent<CombatManager>().UndoCombat(attacker, attackedPiece);
+
+                    // Update alpha
+                    alpha = Mathf.Max(alpha, eval);
+                    if (beta <= alpha)
+                    {
+                        // Beta cut-off
+                        break;
+                    }
+                }
+            }
+
+            return maxEval;
+        }
+        else
+        {
+            float minEval = float.MaxValue;
+
+            foreach (GameObject movePlate in movePlates)
+            {
+                MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                if (movePlateScript.GetReference() == defender)
+                {
+                    // Get the coordinates of the move plate
+                    int targetX = movePlateScript.GetX();
+                    int targetY = movePlateScript.GetY();
+
+                    // Simulate the defensive move
+                    defender.GetComponent<Piece>().MoveTo(targetX, targetY);
+
+                    // Recursive call to Minimax for the next depth
+                    float eval = Minimax(attacker, defender, true, alpha, beta);
+                    minEval = Mathf.Min(minEval, eval);
+
+                    // Undo the defensive move
+                    defender.GetComponent<Piece>().MoveTo(defender.GetComponent<Piece>().GetXBoard(), defender.GetComponent<Piece>().GetYBoard());
+
+                    // Update beta
+                    beta = Mathf.Min(beta, eval);
+                    if (beta <= alpha)
+                    {
+                        // Alpha cut-off
+                        break;
+                    }
+                }
+            }
+
+            return minEval;
+        }
+    }
+
+    private float EvaluateGameState()
+    {
+        // Implement your evaluation function to assign a score to the current game state
+        // The score should reflect the desirability of the state for the AI player
+
+        // Example evaluation function: count the number of AI-controlled pieces on the board
+        List<GameObject> aiPieces = sipliBoard.GetComponent<PieceGenerator>().GetPiecesByPlayer(teamColor);
+        return aiPieces.Count;
     }
 
 }

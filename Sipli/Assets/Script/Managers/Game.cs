@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
 
     public bool hideRedPieces = false;
 
+    public Stack<MoveData> moveStack = new Stack<MoveData>();
+
     private void Start()
     {
         sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<PieceGenerator>();
@@ -21,6 +23,7 @@ public class Game : MonoBehaviour
 
     private void Update()
     {
+
         if (gameOver && Input.GetMouseButtonDown(0))
         {
             gameOver = false;
@@ -28,8 +31,8 @@ public class Game : MonoBehaviour
         }
 
         
-            HidePieces("red", hideRedPieces);
-            hideRedPieces = true;
+        //HidePieces("red", hideRedPieces);
+        //hideRedPieces = true;
 
         if (playerWinner != null)
         {
@@ -49,6 +52,41 @@ public class Game : MonoBehaviour
 
     }
 
+    public void UndoMove()
+    {
+
+        Debug.Log("movestack in UndoMove");
+        Debug.Log(this.moveStack.Count);
+
+
+        if (moveStack.Count > 0)
+        {
+            MoveData lastMove = moveStack.Pop();
+
+            GameObject piece = lastMove.piece;
+            int startX = lastMove.startX;
+            int startY = lastMove.startY;
+            int targetX = lastMove.targetX;
+            int targetY = lastMove.targetY;
+
+            // Revert the move by moving the piece back to its original position
+            piece.GetComponent<Piece>().MoveTo(startX, startY);
+
+            // Check if combat occurred during the move
+            if (lastMove.hasCombat)
+            {
+                GameObject attackedPiece = lastMove.attackedPiece;
+
+                // Reactivate the attacked piece
+                attackedPiece.GetComponent<Piece>().Reactivate();
+
+                // Move the attacked piece back to its original position
+                attackedPiece.GetComponent<Piece>().MoveTo(targetX, targetY);
+            }
+
+            // Additional logic to update game state, variables, or any other relevant data
+        }
+    }
 
     public void HidePieces(string player, bool hide)
     {
@@ -133,3 +171,4 @@ public class Game : MonoBehaviour
 
 
 }
+
