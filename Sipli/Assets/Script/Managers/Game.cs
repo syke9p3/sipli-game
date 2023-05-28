@@ -20,6 +20,8 @@ public class Game : MonoBehaviour
     private void Start()
     {
         sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<PieceGenerator>();
+        Debug.Log("=============== Initial Game State ================");
+        PrintCurrentGameState();
     }
 
     private void Update()
@@ -72,25 +74,8 @@ public class Game : MonoBehaviour
     {
         GameState gameState = GetCurrentGameState();
 
-        Debug.Log("=== Current Game State ===");
+        Debug.Log("=== Real Game State ===");
         Debug.Log("Current Player: " + gameState.GetCurrentPlayer());
-        Debug.Log("Total Visits: " + gameState.GetTotalVisits());
-        Debug.Log("Piece Count: " + gameState.GetAllPieces().Count);
-        List<GameObject> redPieces = gameState.GetPiecesByPlayer("red");
-        List<GameObject> bluePieces = gameState.GetPiecesByPlayer("blue");
-
-        Debug.Log("Red Pieces:");
-        foreach (GameObject redPiece in redPieces)
-        {
-            Debug.Log(redPiece.name);
-        }
-
-        Debug.Log("Blue Pieces:");
-        foreach (GameObject bluePiece in bluePieces)
-        {
-            Debug.Log(bluePiece.name);
-        }
-        Debug.Log("Board Status:");
 
         int width = sipliBoard.GetComponent<BoardGenerator>().GetWidth();
         int height = sipliBoard.GetComponent<BoardGenerator>().GetHeight();
@@ -198,8 +183,7 @@ public class Game : MonoBehaviour
         currentPlayer = (currentPlayer == "blue") ? "red" : "blue";
         //PrintCurrentGameState();
 
-        GameState gameState = GetCurrentGameState();
-        //gameState.PrintCurrentGameState();
+        PrintCurrentGameState();
     }
 
     private bool IsInfinityPieceAtFarthestSide(string player)

@@ -44,22 +44,23 @@ public class GameState
         int width = clonedGameState.positions.GetLength(0);
         int height = clonedGameState.positions.GetLength(1);
 
-        //clonedGameState.PrintCurrentGameState();
-       
+        Debug.Log("======================Cloning Game State===================");
+
+        clonedGameState.PrintCurrentGameState();
+
         return clonedGameState;
     }
 
     public void PrintCurrentGameState()
     {
-        Debug.Log("=== Current Game State in GS class===");
-        Debug.Log("Current Player: " + GetCurrentPlayer());
-        Debug.Log("Total Visits: " + GetTotalVisits());
-        Debug.Log("Piece Count: " + GetAllPieces().Count);
-        List<GameObject> redPieces = GetPiecesByPlayer("red");
-        List<GameObject> bluePieces = GetPiecesByPlayer("blue");
+        Debug.Log("=== Simulated Game State ===");
+        //Debug.Log("Current Player: " + GetCurrentPlayer());
+        //Debug.Log("Total Visits: " + GetTotalVisits());
+        //List<GameObject> redPieces = GetPiecesByPlayer("red");
+        //List<GameObject> bluePieces = GetPiecesByPlayer("blue");
 
-        Debug.Log("Red Pieces:" + redPieces.Count);
-        Debug.Log("Blue Pieces:" + bluePieces.Count);
+        //Debug.Log("Red Pieces:" + redPieces.Count);
+        //Debug.Log("Blue Pieces:" + bluePieces.Count);
 
 
         int width = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<BoardGenerator>().GetWidth();
@@ -102,18 +103,6 @@ public class GameState
         pieces = new List<GameObject>();
         currentPlayer = "blue";
         totalVisits = 0;
-    }
-
-    private int GetPieceValue(string pieceName)
-    {
-        // Retrieve the piece value from the pieceRanks dictionary
-        if (pieceRanks.TryGetValue(pieceName, out int value))
-        {
-            return value;
-        }
-
-        // Default value if the piece name is not found in the dictionary
-        return 0;
     }
 
     public GameObject[,] GetBoard()
@@ -214,6 +203,33 @@ public class GameState
         return legalMoves;
     }
 
+    public List<GameObject> GetLegalMovesByPiece(GameObject piece)
+{
+    List<GameObject> legalMoves = new List<GameObject>();
+
+    piece.GetComponent<Piece>().InitiateMovePlates();
+
+    GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+    foreach (GameObject movePlate in movePlates)
+    {
+        MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+        if (movePlateScript.GetReference() == piece)
+        {
+            int targetX = movePlateScript.GetX();
+            int targetY = movePlateScript.GetY();
+
+            GameObject targetPiece = GetPieceAtPosition(targetX, targetY);
+            if (targetPiece == null || targetPiece.GetComponent<Piece>().GetCurrentPlayer() != piece.GetComponent<Piece>().GetCurrentPlayer())
+            {
+                legalMoves.Add(movePlate);
+            }
+        }
+    }
+
+    return legalMoves;
+}
+
     public bool IsGameOver()
     {
         //Check if the blue infinity piece is captured
@@ -254,6 +270,18 @@ public class GameState
     {
         // Implement the necessary logic to make the move in your game
         piece.GetComponent<Piece>().MoveTo(targetX, targetY);
+    }
+
+    public GameState MakeVirtualMove(GameObject piece, int targetX, int targetY)
+    {
+        // Create a virtual copy of the current game state
+        GameState virtualGameState = Clone();
+
+        // Make the move in the virtual game state
+        virtualGameState.positions[piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard()] = null;
+        virtualGameState.positions[targetX, targetY] = piece;
+
+        return virtualGameState;
     }
 
     public GameObject GetPosition(int x, int y)

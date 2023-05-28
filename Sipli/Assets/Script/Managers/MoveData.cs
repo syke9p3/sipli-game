@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveData
+public class Action
 {
     public GameObject piece;
     public int startX;
@@ -12,7 +12,7 @@ public class MoveData
     public bool hasCombat;
     public GameObject attackedPiece;
 
-    public MoveData(GameObject piece, int startX, int startY, int targetX, int targetY)
+    public Action(GameObject piece, int startX, int startY, int targetX, int targetY)
     {
         this.piece = piece;
         this.startX = startX;

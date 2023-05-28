@@ -221,23 +221,25 @@ public class Piece : MonoBehaviour
 
         // Logic to initiate move plates...
 
-        switch (this.name)
-        {
-            case "blu_infinity":
-            case "blu_xzero":
-            case "blu_zero":
-            case "blu_one":
-            case "blu_two":
-            case "blu_three":
-            case "red_infinity":
-            case "red_xzero":
-            case "red_zero":
-            case "red_one":
-            case "red_two":
-            case "red_three":
-                SurroundMovePlate();
-                break;
-        }
+        //switch (this.name)
+        //{
+        //    case "blu_infinity":
+        //    case "blu_xzero":
+        //    case "blu_zero":
+        //    case "blu_one":
+        //    case "blu_two":
+        //    case "blu_three":
+        //    case "red_infinity":
+        //    case "red_xzero":
+        //    case "red_zero":
+        //    case "red_one":
+        //    case "red_two":
+        //    case "red_three":
+        //        SurroundMovePlate();
+        //        break;
+        //}
+
+        SurroundMovePlate();
 
         return true; // Move plates successfully initiated
 
@@ -302,6 +304,32 @@ public class Piece : MonoBehaviour
         mpScript.attack = true;
         mpScript.SetReference(gameObject);
         mpScript.SetCoords(matrixX, matrixY);
+    }
+
+    public List<Vector2Int> GetLegalMoves()
+    {
+        List<Vector2Int> legalMoves = new List<Vector2Int>();
+
+        AddLegalMoveIfValid(xBoard, yBoard + 1, legalMoves);
+        AddLegalMoveIfValid(xBoard, yBoard - 1, legalMoves);
+        AddLegalMoveIfValid(xBoard - 1, yBoard, legalMoves);
+        AddLegalMoveIfValid(xBoard + 1, yBoard, legalMoves);
+
+        return legalMoves;
+    }
+
+    private void AddLegalMoveIfValid(int x, int y, List<Vector2Int> legalMoves)
+    {
+        PieceGenerator sc = sipliBoard.GetComponent<PieceGenerator>();
+        if (sc.PositionOnBoard(x, y))
+        {
+            GameObject cp = sc.GetPosition(x, y);
+
+            if (cp == null || cp.GetComponent<Piece>().GetPlayer() != player)
+            {
+                legalMoves.Add(new Vector2Int(x, y));
+            }
+        }
     }
 
     public List<GameObject> GetValidMovePlatesForSimulation()

@@ -186,9 +186,9 @@ public class PieceGenerator : MonoBehaviour
         return piece;
     }
 
-    public List<MoveData> GetLegalMoves(string playerColor)
+    public List<Action> GetLegalMoves(string playerColor)
     {
-        List<MoveData> legalMoves = new List<MoveData>();
+        List<Action> legalMoves = new List<Action>();
 
         List<GameObject> currentPlayerPieces = GetPiecesByPlayer(playerColor);
         foreach (GameObject piece in currentPlayerPieces)
@@ -210,7 +210,7 @@ public class PieceGenerator : MonoBehaviour
                     if (targetPiece == null || targetPiece.GetComponent<Piece>().GetCurrentPlayer() != playerColor)
                     {
                         // Create a new MoveData object for the valid move
-                        MoveData moveData = new MoveData(piece, piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
+                        Action moveData = new Action(piece, piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
 
                         legalMoves.Add(moveData);
                     }

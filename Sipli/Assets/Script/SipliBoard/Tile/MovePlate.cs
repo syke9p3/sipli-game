@@ -34,7 +34,7 @@ public class MovePlate : MonoBehaviour
         game = controller.GetComponent<Game>();
         sipliBoard = GameObject.FindGameObjectWithTag("SipliBoard");
 
-        MoveData moveData;
+        Action moveData;
 
         // When two pieces collide, resolve combat
         if (attack)
@@ -43,7 +43,7 @@ public class MovePlate : MonoBehaviour
             GameObject defender = sipliBoard.GetComponent<PieceGenerator>().GetPosition(matrixX, matrixY);
 
             // Create a new MoveData object for the move
-            moveData = new MoveData(attacker, attacker.GetComponent<Piece>().GetXBoard(), attacker.GetComponent<Piece>().GetYBoard(), matrixX, matrixY);
+            Action moveData = new Action(attacker, attacker.GetComponent<Piece>().GetXBoard(), attacker.GetComponent<Piece>().GetYBoard(), matrixX, matrixY);
 
             controller.GetComponent<CombatManager>().ResolveCombat(attacker, defender);
 

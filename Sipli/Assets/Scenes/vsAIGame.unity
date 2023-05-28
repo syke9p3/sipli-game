@@ -624,11 +624,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492746046}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edf217a2757d3ad40b62ca59ec56d7f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e3ed96b40cd0cd42ab6ed46b9e35e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teamColor: red
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +985,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347667109065019278, guid: 07426803b69ec5f4f970a77755a94460, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4347667109065019278, guid: 07426803b69ec5f4f970a77755a94460, type: 3}
       propertyPath: teamColor
@@ -1126,6 +1127,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 999507615}
   m_CullTransparentMesh: 1
+--- !u!1 &1119578936
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1119578938}
+  - component: {fileID: 1119578937}
+  m_Layer: 0
+  m_Name: MonteCarlo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1119578937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119578936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e948c980049abae41ac767763c136891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teamColor: red
+--- !u!4 &1119578938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119578936}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.8976987, y: -0.41248393, z: -9.92388}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1246211694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1390,6 +1436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sipliBoard: {fileID: 0}
   playerTurnUI: {fileID: 0}
+  tile: {fileID: 0}
   playerWinner: 
   hideRedPieces: 0
 --- !u!4 &1526924353

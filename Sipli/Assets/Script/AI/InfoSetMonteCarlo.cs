@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MonteCarlo : MonoBehaviour
+public class InfoSetMonteCarlo : MonoBehaviour
 {
     private PieceGenerator pieceGenerator;
     private Game game;
@@ -29,7 +29,6 @@ public class MonteCarlo : MonoBehaviour
         Game cp = controller.GetComponent<Game>();
         if (cp.GetCurrentPlayer() == teamColor && !cp.IsGameOver())
         {
-            Debug.Log("Monte Carlo AI: Starting Monte Carlo algorithm");
             MonteCarloAI(cp.GetCurrentGameState(), 2, 1.0f);
         }
     }
@@ -37,6 +36,8 @@ public class MonteCarlo : MonoBehaviour
     public void MonteCarloAI(GameState gameState, int iterations, float explorationParameter)
     {
         Debug.Log("Monte Carlo AI: Starting Monte Carlo simulations");
+
+        // SELECTION
 
         // Get all pieces controlled by the AI player
         List<GameObject> aiPieces = gameState.GetPiecesByPlayer(teamColor);
@@ -112,7 +113,13 @@ public class MonteCarlo : MonoBehaviour
 
                         // Make the move in the cloned game state
                         clonedState.MakeMove(selectedPiece, targetX, targetY);
-                        Debug.Log("Monte Carlo AI: Made move");
+                        Debug.Log("Monte Carlo AI: Made move in iteration " + iterations);
+                        GameObject[] destroyMovePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+                        for (int a = 0; a < destroyMovePlates.Length; a++)
+                        {
+                            Destroy(destroyMovePlates[i]); //Be careful with this function "Destroy" it is asynchronous
+                        }
+                        clonedState.NextPlayerTurn();
                     }
                     else
                     {
@@ -141,6 +148,12 @@ public class MonteCarlo : MonoBehaviour
 
                             // Make the move in the cloned game state
                             clonedState.MakeMove(selectedPiece, targetX, targetY);
+                            GameObject[] destroyMovePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+                            for (int a = 0; a < destroyMovePlates.Length; a++)
+                            {
+                                Destroy(destroyMovePlates[i]); //Be careful with this function "Destroy" it is asynchronous
+                            }
+                            clonedState.NextPlayerTurn();
                             Debug.Log("Monte Carlo AI: Made combat move");
 
 
@@ -149,12 +162,12 @@ public class MonteCarlo : MonoBehaviour
                 }
             }
 
-                //// Perform a playout or simulate the rest of the game
-                //float score = Simulate(clonedState);
+            //Perform a playout or simulate the rest of the game
+            //float score = Simulate(clonedState, iterations);
 
-                //// Update the statistics of the moves in the game state
-                //UpdateStatistics(gameState, score);
-            }
+            //Update the statistics of the moves in the game state
+            //UpdateStatistics(gameState, score);
+        }
 
         //Debug.Log("Monte Carlo AI: Monte Carlo simulations completed");
 
@@ -170,38 +183,22 @@ public class MonteCarlo : MonoBehaviour
         //}
     }
 
-    public float Simulate(GameState state)
+    public float Simulate(GameState state, int iterations)
     {
         Debug.Log("Monte Carlo AI: Starting simulation");
 
         // Simulate the rest of the game using a random move strategy
         // Replace this with your own simulation logic or AI strategy
 
-        while (!state.IsGameOver())
+        GameState simulationState = state.Clone(); // Create a clone of the initial game state for simulation
+
+        for (int i = 0; i < iterations; i++)
         {
-            List<GameObject> pieces = state.GetPiecesByPlayer(state.GetCurrentPlayer());
+            List<GameObject> pieces = simulationState.GetPiecesByPlayer(simulationState.GetCurrentPlayer());
             if (pieces.Count > 0)
             {
                 GameObject selectedPiece = pieces[Random.Range(0, pieces.Count)];
-                selectedPiece.GetComponent<Piece>().InitiateMovePlates();
-                GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
-                List<GameObject> validMovePlates = new List<GameObject>();
-
-                foreach (GameObject movePlate in movePlates)
-                {
-                    MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
-
-                    if (movePlateScript.GetReference() == selectedPiece)
-                    {
-                        int targetX = movePlateScript.GetX();
-                        int targetY = movePlateScript.GetY();
-
-                        if (state.GetPosition(targetX, targetY) == null)
-                        {
-                            validMovePlates.Add(movePlate);
-                        }
-                    }
-                }
+                List<GameObject> validMovePlates = simulationState.GetLegalMovesByPiece(selectedPiece);
 
                 if (validMovePlates.Count > 0)
                 {
@@ -209,18 +206,20 @@ public class MonteCarlo : MonoBehaviour
                     MovePlate movePlateScript = selectedMovePlate.GetComponent<MovePlate>();
                     int targetX = movePlateScript.GetX();
                     int targetY = movePlateScript.GetY();
-                    state.MakeMove(selectedPiece, targetX, targetY);
+
+                    simulationState.MakeMove(selectedPiece, targetX, targetY);
                 }
             }
 
-            state.NextPlayerTurn();
+            simulationState.NextPlayerTurn();
         }
 
         // Return a score indicating the outcome of the simulated game
         // You might use a custom evaluation function or score calculation
         // based on the game rules and objectives
 
-        float score = EvaluateScore(state);
+        // float score = EvaluateScore(simulationState);
+        float score = 10f; // delete score
         Debug.Log("Monte Carlo AI: Simulation completed. Score: " + score);
 
         return score;
@@ -302,6 +301,8 @@ public class MonteCarlo : MonoBehaviour
 
         return bestMove;
     }
+
+
 
     private void MakeMove(GameObject movePlate)
     {

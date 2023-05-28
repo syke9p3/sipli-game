@@ -24,19 +24,19 @@ public class AIPlayer : MonoBehaviour
 
     public void MakeRandomMove()
     {
-        List<MoveData> legalMoves = MoveGeneration(game.GetCurrentGameState());
+        List<Action> legalMoves = MoveGeneration(game.GetCurrentGameState());
         
         if (legalMoves.Count > 0)
         {
-            MoveData selectedMove = SelectMove(legalMoves);
+            Action selectedMove = SelectMove(legalMoves);
             MakeMove(selectedMove);
         }
     }
 
-    public List<MoveData> MoveGeneration(GameState gameState)
+    public List<Action> MoveGeneration(GameState gameState)
     {
 
-        List<MoveData> legalMoves = new List<MoveData>();
+        List<Action> legalMoves = new List<Action>();
 
         List<GameObject> aiPieces = sipliBoard.GetComponent<PieceGenerator>().GetPiecesByPlayer(teamColor);
 
@@ -57,7 +57,7 @@ public class AIPlayer : MonoBehaviour
                     GameObject targetPiece = sipliBoard.GetComponent<PieceGenerator>().GetPosition(targetX, targetY);
                     if (targetPiece == null || targetPiece.GetComponent<Piece>().GetCurrentPlayer() != teamColor)
                     {
-                        MoveData moveData = new MoveData(piece, piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
+                        Action moveData = new Action(piece, piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
                         legalMoves.Add(moveData);
                     }
                 }
@@ -69,13 +69,13 @@ public class AIPlayer : MonoBehaviour
         return legalMoves;
     }
 
-    public MoveData SelectMove(List<MoveData> legalMoves)
+    public Action SelectMove(List<Action> legalMoves)
     {
         int randomIndex = Random.Range(0, legalMoves.Count);
         return legalMoves[randomIndex];
     }
 
-    public void MakeMove(MoveData moveData)
+    public void MakeMove(Action moveData)
     {
         GameObject piece = moveData.GetPiece();
         int targetX = moveData.GetTargetX();
