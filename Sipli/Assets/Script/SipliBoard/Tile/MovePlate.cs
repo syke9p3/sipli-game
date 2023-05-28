@@ -58,7 +58,7 @@ public class MovePlate : MonoBehaviour
         reference.GetComponent<Piece>().GetYBoard());
 
         moveData = new MoveData(reference, reference.GetComponent<Piece>().GetXBoard(), reference.GetComponent<Piece>().GetYBoard(), matrixX, matrixY);
-        Debug.Log(reference + " is moving from (" + reference.GetComponent<Piece>().GetXBoard() + ", " + reference.GetComponent<Piece>().GetYBoard() + ") to (" + matrixX + ", " + matrixY + ")");
+        //Debug.Log(reference + " is moving from (" + reference.GetComponent<Piece>().GetXBoard() + ", " + reference.GetComponent<Piece>().GetYBoard() + ") to (" + matrixX + ", " + matrixY + ")");
 
 
         //Move reference chess piece to this position

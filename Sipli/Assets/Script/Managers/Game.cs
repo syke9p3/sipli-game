@@ -9,7 +9,7 @@ public class Game : MonoBehaviour
     public GameObject playerTurnUI;
 
     private string currentPlayer = "blue";
-    private string playerWinner;
+    public string playerWinner;
     private bool gameOver = false;
 
     public bool hideRedPieces = false;
@@ -34,11 +34,6 @@ public class Game : MonoBehaviour
         //HidePieces("red", hideRedPieces);
         //hideRedPieces = true;
 
-        if (playerWinner != null)
-        {
-            Winner(playerWinner);
-        }
-
         if (IsInfinityPieceAtFarthestSide("red"))
         {
             playerWinner = "red";
@@ -52,12 +47,86 @@ public class Game : MonoBehaviour
 
     }
 
+    public GameState GetCurrentGameState()
+    {
+        GameState gameState = new GameState();
+
+        gameState.currentPlayer = currentPlayer;
+        gameState.totalVisits = 0;
+        gameState.pieces = new List<GameObject>(sipliBoard.GetAllPieces());
+
+        for (int x = 0; x < sipliBoard.GetComponent<BoardGenerator>().GetWidth(); x++)
+        {
+            for (int y = 0; y < sipliBoard.GetComponent<BoardGenerator>().GetHeight(); y++)
+            {
+                gameState.positions[x, y] = sipliBoard.GetPosition(x, y);
+            }
+        }
+
+        return gameState;
+    }
+
+    public void PrintCurrentGameState()
+    {
+        GameState gameState = GetCurrentGameState();
+
+        Debug.Log("=== Current Game State ===");
+        Debug.Log("Current Player: " + gameState.GetCurrentPlayer());
+        Debug.Log("Total Visits: " + gameState.GetTotalVisits());
+        Debug.Log("Piece Count: " + gameState.GetAllPieces().Count);
+        List<GameObject> redPieces = gameState.GetPiecesByPlayer("red");
+        List<GameObject> bluePieces = gameState.GetPiecesByPlayer("blue");
+
+        Debug.Log("Red Pieces:");
+        foreach (GameObject redPiece in redPieces)
+        {
+            Debug.Log(redPiece.name);
+        }
+
+        Debug.Log("Blue Pieces:");
+        foreach (GameObject bluePiece in bluePieces)
+        {
+            Debug.Log(bluePiece.name);
+        }
+        Debug.Log("Board Status:");
+
+        int width = sipliBoard.GetComponent<BoardGenerator>().GetWidth();
+        int height = sipliBoard.GetComponent<BoardGenerator>().GetHeight();
+
+        // Piece representation dictionary
+        Dictionary<string, string> pieceRepresentations = new Dictionary<string, string>
+        {
+            { "red_infinity", "RI" },
+            { "red_xzero", "RX" },
+            { "red_three", "RH" },
+            { "red_two", "RT" },
+            { "red_one", "RO" },
+            { "red_zero", "RZ" },
+            { "blu_infinity", "BI" },
+            { "blu_xzero", "BX" },
+            { "blu_three", "BH" },
+            { "blu_two", "BT" },
+            { "blu_one", "BO" },
+            { "blu_zero", "BZ" }
+        };
+
+        for (int y = height - 1; y >= 0; y--)
+        {
+            string row = "";
+            for (int x = 0; x < width; x++)
+            {
+                GameObject piece = gameState.GetPieceAtPosition(x, y);
+                string pieceRepresentation = (piece != null && pieceRepresentations.ContainsKey(piece.name))
+                    ? pieceRepresentations[piece.name]
+                    : "--";
+                row += "[" + pieceRepresentation + "]";
+            }
+            Debug.Log(row);
+        }
+    }
+
     public void UndoMove()
     {
-
-        Debug.Log("movestack in UndoMove");
-        Debug.Log(this.moveStack.Count);
-
 
         if (moveStack.Count > 0)
         {
@@ -125,6 +194,10 @@ public class Game : MonoBehaviour
     public void NextTurn()
     {
         currentPlayer = (currentPlayer == "blue") ? "red" : "blue";
+        //PrintCurrentGameState();
+
+        GameState gameState = GetCurrentGameState();
+        //gameState.PrintCurrentGameState();
     }
 
     private bool IsInfinityPieceAtFarthestSide(string player)
@@ -138,10 +211,12 @@ public class Game : MonoBehaviour
                 int maxY = sipliBoard.GetComponent<BoardGenerator>().GetHeight() - 1;
                 if (player == "blue" && y == maxY)
                 {
+                    Winner(player);
                     return true;
                 }
                 else if (player == "red" && y == 0)
                 {
+                    Winner(player);
                     return true;
                 }
             }
@@ -149,9 +224,10 @@ public class Game : MonoBehaviour
         return false;
     }
 
-    public void Winner(string playerWinner)
+    public void Winner(string winner)
     {
         gameOver = true;
+        playerWinner = winner;
         
         Tile sipliBoardTile = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<Tile>();
         GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;

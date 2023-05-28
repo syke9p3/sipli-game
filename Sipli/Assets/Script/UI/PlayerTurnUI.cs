@@ -21,6 +21,7 @@ public class PlayerTurnUI : MonoBehaviour
         playerTurnUI = GameObject.FindGameObjectWithTag("PlayerTurnUI");
 
         string currentPlayer = controller.GetComponent<Game>().GetCurrentPlayer();
+        string winner = controller.GetComponent<Game>().playerWinner;
         Color playerColor = tile.playerColor;
         Color aiColor = tile.aiColor;
 
@@ -38,15 +39,15 @@ public class PlayerTurnUI : MonoBehaviour
             }
         } else
         {
-            string winner = controller.GetComponent<Game>().GetPlayerWinner();
 
-            if (winner == "blue")
+
+            if (winner == "red")
             {
-                playerTurnUI.GetComponent<Image>().color = playerColor;
+                playerTurnUI.GetComponent<Image>().color = aiColor;
             }
             else
             {
-                playerTurnUI.GetComponent<Image>().color = aiColor;
+                playerTurnUI.GetComponent<Image>().color = playerColor;
             }
 
         }

@@ -21,10 +21,18 @@ public class Piece : MonoBehaviour
     public bool isHidden = false;
 
     public Sprite ally_infinity, ally_xzero, ally_zero, ally_one, ally_two, ally_three;
-    public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three; //enemy_piece
+    public Sprite enemy_infinity, enemy_xzero, enemy_zero, enemy_one, enemy_two, enemy_three, enemy_piece;
 
     private int rank;
-    public static Dictionary<string, int> pieceRanks;
+    public Dictionary<string, int> pieceRanks = new Dictionary<string, int>
+        {
+            { "blu_one", 3 },
+            { "blu_two", 4 },
+            { "blu_three", 5 },
+            { "red_one", 3 },
+            { "red_two", 4 },
+            { "red_three", 5 }
+        };
 
     public void Activate()
     {
@@ -41,29 +49,23 @@ public class Piece : MonoBehaviour
             case "blu_one": this.GetComponent<SpriteRenderer>().sprite = ally_one; player = "blue"; break;
             case "blu_two": this.GetComponent<SpriteRenderer>().sprite = ally_two; player = "blue"; break;
             case "blu_three": this.GetComponent<SpriteRenderer>().sprite = ally_three; player = "blue"; break;
+
+
             case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_infinity; player = "red"; break;
             case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_xzero; player = "red"; break;
             case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_zero; player = "red"; break;
             case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_one; player = "red"; break;
             case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_two; player = "red"; break;
             case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_three; player = "red"; break;
-                //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-                //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-                //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-                //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-                //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
-                //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+
+            //case "red_infinity": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_xzero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_zero": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_one": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_two": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
+            //case "red_three": this.GetComponent<SpriteRenderer>().sprite = enemy_piece; player = "red"; break;
         }
 
-        pieceRanks = new Dictionary<string, int>
-        {
-            { "blu_one", 3 },
-            { "blu_two", 4 },
-            { "blu_three", 5 },
-            { "red_one", 3 },
-            { "red_two", 4 },
-            { "red_three", 5 }
-        };
 
 
     }
@@ -302,6 +304,87 @@ public class Piece : MonoBehaviour
         mpScript.SetCoords(matrixX, matrixY);
     }
 
+    public List<GameObject> GetValidMovePlatesForSimulation()
+    {
+        List<GameObject> validMovePlates = new List<GameObject>();
+
+        // Logic to generate move plates for simulation...
+
+        switch (this.name)
+        {
+            case "blu_infinity":
+            case "blu_xzero":
+            case "blu_zero":
+            case "blu_one":
+            case "blu_two":
+            case "blu_three":
+            case "red_infinity":
+            case "red_xzero":
+            case "red_zero":
+            case "red_one":
+            case "red_two":
+            case "red_three":
+                AddMovePlateIfValid(xBoard, yBoard + 1, validMovePlates);
+                AddMovePlateIfValid(xBoard, yBoard - 1, validMovePlates);
+                AddMovePlateIfValid(xBoard - 1, yBoard + 0, validMovePlates);
+                AddMovePlateIfValid(xBoard + 1, yBoard + 0, validMovePlates);
+                break;
+        }
+
+        return validMovePlates;
+    }
+
+    private void AddMovePlateIfValid(int x, int y, List<GameObject> validMovePlates)
+    {
+        PieceGenerator sc = sipliBoard.GetComponent<PieceGenerator>();
+        if (sc.PositionOnBoard(x, y))
+        {
+            GameObject cp = sc.GetPosition(x, y);
+
+            if (cp == null)
+            {
+                validMovePlates.Add(GenerateMovePlate(x, y));
+            }
+            else if (cp.GetComponent<Piece>().player != player)
+            {
+                validMovePlates.Add(GenerateAttackMovePlate(x, y));
+            }
+        }
+    }
+
+    private GameObject GenerateMovePlate(int matrixX, int matrixY)
+    {
+        //Get the board value in order to convert to xy coords
+        float x = matrixX;
+        float y = matrixY;
+
+        //Set actual unity values
+        GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
+
+        MovePlate mpScript = mp.GetComponent<MovePlate>();
+        mpScript.SetReference(gameObject);
+        mpScript.SetCoords(matrixX, matrixY);
+
+        return mp;
+    }
+
+    private GameObject GenerateAttackMovePlate(int matrixX, int matrixY)
+    {
+        //Get the board value in order to convert to xy coords
+        float x = matrixX;
+        float y = matrixY;
+
+        //Set actual unity values
+        GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
+
+        MovePlate mpScript = mp.GetComponent<MovePlate>();
+        mpScript.attack = true;
+        mpScript.SetReference(gameObject);
+        mpScript.SetCoords(matrixX, matrixY);
+
+        return mp;
+    }
+
     public void MoveTo(int x, int y)
     {
 
@@ -362,6 +445,30 @@ public class Piece : MonoBehaviour
         // Rotate the arrow object to match the movement direction
         float angle = Mathf.Atan2(movementDirection.y, movementDirection.x) * Mathf.Rad2Deg;
         arrow.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f); // Subtract 90 degrees offset
+    }
+
+    public Piece Clone()
+    {
+        Piece clonedPiece = new Piece();
+
+        // Copy the relevant properties and fields from the original piece to the cloned piece
+        clonedPiece.controller = this.controller;
+        clonedPiece.sipliBoard = this.sipliBoard;
+        clonedPiece.movePlate = this.movePlate;
+        clonedPiece.arrowPrefab = this.arrowPrefab;
+        clonedPiece.movePlatesVisible = this.movePlatesVisible;
+        clonedPiece.xBoard = this.xBoard;
+        clonedPiece.yBoard = this.yBoard;
+        clonedPiece.previousPosition = this.previousPosition;
+        clonedPiece.player = this.player;
+        clonedPiece.isActive = this.isActive;
+        clonedPiece.isHidden = this.isHidden;
+        clonedPiece.rank = this.rank;
+
+        // Copy the dictionary of piece ranks
+        clonedPiece.pieceRanks = new Dictionary<string, int>(this.pieceRanks);
+
+        return clonedPiece;
     }
 
 

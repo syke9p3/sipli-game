@@ -12,12 +12,17 @@ public class PieceGenerator : MonoBehaviour
 
     private int boardWidth;
     private int boardHeight;
+
+    private Game game;
     private void Start()
     {
         boardWidth = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<BoardGenerator>().GetWidth();
         boardHeight = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<BoardGenerator>().GetHeight();
 
         GeneratePieces();
+
+
+        game = GameObject.FindGameObjectWithTag("GameController").GetComponent<Game>();
     }
 
     private void Update()
@@ -172,6 +177,65 @@ public class PieceGenerator : MonoBehaviour
 
         return pieces;
     }
+
+    public GameObject GetPieceAtPosition(int x, int y)
+    {
+        // Retrieve the piece at the specified position
+        GameObject piece = positions[x, y];
+
+        return piece;
+    }
+
+    public List<MoveData> GetLegalMoves(string playerColor)
+    {
+        List<MoveData> legalMoves = new List<MoveData>();
+
+        List<GameObject> currentPlayerPieces = GetPiecesByPlayer(playerColor);
+        foreach (GameObject piece in currentPlayerPieces)
+        {
+            // Generate move plates for the piece
+            piece.GetComponent<Piece>().InitiateMovePlates();
+
+            GameObject[] movePlates = GameObject.FindGameObjectsWithTag("MovePlate");
+            foreach (GameObject movePlate in movePlates)
+            {
+                MovePlate movePlateScript = movePlate.GetComponent<MovePlate>();
+
+                if (movePlateScript.GetReference() == piece)
+                {
+                    int targetX = movePlateScript.GetX();
+                    int targetY = movePlateScript.GetY();
+
+                    GameObject targetPiece = GetPieceAtPosition(targetX, targetY);
+                    if (targetPiece == null || targetPiece.GetComponent<Piece>().GetCurrentPlayer() != playerColor)
+                    {
+                        // Create a new MoveData object for the valid move
+                        MoveData moveData = new MoveData(piece, piece.GetComponent<Piece>().GetXBoard(), piece.GetComponent<Piece>().GetYBoard(), targetX, targetY);
+
+                        legalMoves.Add(moveData);
+                    }
+                }
+            }
+        }
+
+        return legalMoves;
+    }
+
+    public List<GameObject> GetAllPieces()
+    {
+        List<GameObject> allPieces = new List<GameObject>();
+
+        // Iterate over the generated pieces and add them to the list
+        foreach (Transform pieceTransform in transform)
+        {
+            GameObject piece = pieceTransform.gameObject;
+            allPieces.Add(piece);
+        }
+
+        return allPieces;
+    }
+
+
 
 }
 
