@@ -612,6 +612,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 443378271}
   m_CullTransparentMesh: 1
+--- !u!1 &492746046 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4347667109065019275, guid: 07426803b69ec5f4f970a77755a94460, type: 3}
+  m_PrefabInstance: {fileID: 775452739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &492746050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492746046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf217a2757d3ad40b62ca59ec56d7f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -966,6 +983,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4347667109065019278, guid: 07426803b69ec5f4f970a77755a94460, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347667109065019278, guid: 07426803b69ec5f4f970a77755a94460, type: 3}
       propertyPath: teamColor
       value: red
       objectReference: {fileID: 0}
@@ -989,7 +1010,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &999507616
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1369,6 +1390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sipliBoard: {fileID: 0}
   playerTurnUI: {fileID: 0}
+  playerWinner: 
   hideRedPieces: 0
 --- !u!4 &1526924353
 Transform:
@@ -1415,6 +1437,7 @@ MonoBehaviour:
   enemy_one: {fileID: 0}
   enemy_two: {fileID: 0}
   enemy_three: {fileID: 0}
+  enemy_piece: {fileID: 0}
 --- !u!114 &1526924355
 MonoBehaviour:
   m_ObjectHideFlags: 0

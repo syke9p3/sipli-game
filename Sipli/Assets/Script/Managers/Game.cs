@@ -7,6 +7,7 @@ public class Game : MonoBehaviour
 {
     public PieceGenerator sipliBoard;
     public GameObject playerTurnUI;
+    public Tile tile;
 
     private string currentPlayer = "blue";
     public string playerWinner;
@@ -43,6 +44,7 @@ public class Game : MonoBehaviour
         {
             playerWinner = "blue";
             gameOver = true;
+            Debug.Log("farthest side");
         }
 
     }
@@ -228,6 +230,7 @@ public class Game : MonoBehaviour
     {
         gameOver = true;
         playerWinner = winner;
+        SetPlayerWinner(winner);
         
         Tile sipliBoardTile = GameObject.FindGameObjectWithTag("SipliBoard").GetComponent<Tile>();
         GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().enabled = true;
@@ -243,7 +246,8 @@ public class Game : MonoBehaviour
         playerWinner = (playerWinner == "blue") ? "BLUE" : "RED";
         GameObject.FindGameObjectWithTag("WinnerText").GetComponent<Text>().text = playerWinner + " WINS";
         GameObject.FindGameObjectWithTag("RestartText").GetComponent<Text>().enabled = true;
-    }
+
+    } 
 
 
 }

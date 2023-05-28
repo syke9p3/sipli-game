@@ -30,84 +30,85 @@ public class CombatManager : MonoBehaviour
             // Destroy both pieces unless it's an attacker infinity
             if (!(attackerName.Substring(4) == "infinity"))
             {
-                destroyedPiece = attacker;
+                attacker.GetComponent<Piece>().Deactivate();
+                Debug.Log("Same piece battle and not infinity");
             }
-            destroyedPiece = defender;
+
+            defender.GetComponent<Piece>().Deactivate();
         }
 
         // Infinity vs Other Piece
         if (attackerName == "blu_infinity" && defenderName != "red_infinity")
         {
-            destroyedPiece = attacker;
+            Debug.Log(attackerName.Substring(4));
+            attacker.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("red");
         }
         else if (attackerName == "red_infinity" && defenderName != "blu_infinity")
         {
-            destroyedPiece = attacker;
+            attacker.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("blue");
         }
 
         // Other Piece vs Infinity
-        if (attackerName != "blu_infinity" && defenderName == "red_infinity")
+        else if (attackerName != "blu_infinity" && defenderName == "red_infinity")
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("blue");
 
         }
         else if (attackerName != "red_infinity" && defenderName == "blu_infinity")
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("red");
 
         }
 
         // Infinity vs Infinity
-        if (attackerName == "blu_infinity" && defenderName == "red_infinity")
+        else if (attackerName == "blu_infinity" && defenderName == "red_infinity")
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("blue");
         }
         else if (attackerName == "red_infinity" && defenderName == "blu_infinity")
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
             controller.GetComponent<Game>().Winner("red");
         }
 
         // Scout vs Ninja
-        if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) == "xzero"))
+        else if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) == "xzero"))
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
         }
         // Scout vs Other Piece
         else if ((attackerName.Substring(4) == "zero" && defenderName.Substring(4) != "xzero"))
         {
-            destroyedPiece = attacker;
+            attacker.GetComponent<Piece>().Deactivate();
         }
         // Other Piece vs Scout
         else if ((attackerName.Substring(4) != "xzero" && defenderName.Substring(4) == "zero"))
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
         }
 
         // Ninja vs Scout
-        if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) == "zero"))
+        else if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) == "zero"))
         {
-            destroyedPiece = attacker;
+            attacker.GetComponent<Piece>().Deactivate();
         }
         // Ninja vs Other Piece
         else if ((attackerName.Substring(4) == "xzero" && defenderName.Substring(4) != "zero"))
         {
-            destroyedPiece = defender;
+            defender.GetComponent<Piece>().Deactivate();
         }
         // Other Piece vs Ninja
         else if ((attackerName.Substring(4) != "zero" && defenderName.Substring(4) == "xzero"))
         {
-            destroyedPiece = attacker;
+            attacker.GetComponent<Piece>().Deactivate();
         }
-
-
-        if (attackerName.Substring(4) != "infinity" && attackerName.Substring(4) != "xzero" && attackerName.Substring(4) != "zero" &&
-            defenderName.Substring(4) != "infinity" && defenderName.Substring(4) != "xzero" && defenderName.Substring(4) != "zero")
+        else if (attackerName.Substring(4) != "infinity" && attackerName.Substring(4) != "xzero" && attackerName.Substring(4) != "zero" &&
+          defenderName.Substring(4) != "infinity" && defenderName.Substring(4) != "xzero" && defenderName.Substring(4) != "zero")
         {
 
             int attackerRank = attacker.GetComponent<Piece>().pieceRanks[attackerName];
@@ -116,25 +117,23 @@ public class CombatManager : MonoBehaviour
             if (attackerRank == defenderRank)
             {
                 // Same rank, destroy both pieces
-                destroyedPiece = attacker;
-                destroyedPiece = defender;
+                attacker.GetComponent<Piece>().Deactivate();
+                defender.GetComponent<Piece>().Deactivate();
             }
             else if (attackerRank > defenderRank)
             {
                 // Attacker wins, destroy defender
-                destroyedPiece = defender;
+                defender.GetComponent<Piece>().Deactivate();
             }
             else
             {
                 // Defender wins, destroy attacker
-                destroyedPiece = attacker;
+                attacker.GetComponent<Piece>().Deactivate();
             }
         }
         else
         {
         }
-
-        destroyedPiece.GetComponent<Piece>().Deactivate();
 
 
     }
